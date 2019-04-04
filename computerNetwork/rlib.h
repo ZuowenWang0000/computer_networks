@@ -291,7 +291,7 @@ void rel_output (rel_t *);  /* Invoked when some output drained */
 void rel_timer (void); /* Invoked roughly each timer/5 milliseconds */
 
 
-
+/***************************************************************/
 /* Below are some utility functions you don't need for this lab */
 
 /* Fill in a sockaddr_storage with a socket address.  If local is
