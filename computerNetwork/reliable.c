@@ -23,7 +23,6 @@
  * data max length = 500
  */
 
-
 struct reliable_state {
     rel_t *next;			/* Linked list for traversing all connections */
     rel_t **prev;
@@ -31,25 +30,23 @@ struct reliable_state {
     conn_t *c;			/* This is the connection object */
 
     /* Add your own data fields below this */
-    // ...
     buffer_t* send_buffer;
-    // ...
     buffer_t* rec_buffer;
-    // ...
 /*    For the sender side sliding window we need to maintain:
  *     1.SND.UNA    lowest seqno of outstanding frames, SND.UNA = max(SND.UNA, ackno) when an ACK arrives
  *     2.SND.NXT    seqno of next frame to send out, should be equals to the latest sent pack's seqno + 1
  *     3.SND.MAXWIND  max window size
  *     4.Timeout    don't know how to do this one... associate timeouts wih each frame sent retransmit if no ACK
  *                  reeived before timeout
+ *
  *       relevant state but can be calculated: SND.WND = SND.NXT - SND.UNA, SND.WND varies from time!
- *       and SND.WND <= SND.MAXWND
+ *       and SND.WND <= MAXWND
  */
-    int SND_UNA; int SND_NXT; int SND_MAXWND; int timeout;
+    int SND_UNA; int SND_NXT; int MAXWND; int timeout;
 
 /*    For the receiver side sliding window we need to maintain:
  *      1.RCV.NXT   next seqno expected
- *      2.RCV.WND   == RCV.MAXWND
+ *      2.RCV.WND   == MAXWND
  *          if receiving pac has seqno >= RCV.NXT + RCV.WND: then drop this pac
  *          else:                                            store in the rev. buffer
  *
@@ -96,8 +93,11 @@ const struct config_common *cc)
     r->rec_buffer->head = NULL;
     // ...
     //set SND.UNA, SND.NXT, RCV.NXT = 0
-    r->SND_UNA = r->SND_NXT = r->RCV_NXT = 0
-
+    r->SND_UNA = r->SND_NXT = r->RCV_NXT = 0;
+    //read max window size from the configuration parameters via the command
+    r->MAXWND = cc->window
+    //read timeout from the configuration parameters passed via the command
+    r->timeout = cc->timeout
 
     return r;
 }
