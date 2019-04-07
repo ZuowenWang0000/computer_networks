@@ -22,6 +22,7 @@
  * packet max size = 512
  * data max length = 500
  */
+long get_current_system_time();
 
 struct reliable_state {
     rel_t *next;			/* Linked list for traversing all connections */
@@ -128,25 +129,51 @@ rel_recvpkt (rel_t *r, packet_t *pkt, size_t n)
 void
 rel_read (rel_t *s)
 {
-    /*First we let input data flow into packets*/
-    //allocate space for a packet
-    packet_t* packet = (packet_t*)xmalloc(512);
-    //read from conn_input, it returns the number of bytes
-    // 0 if there is no data currently available, and -1 on EOF or error.
-    int read_byte = conn_input(r->c, packet->data, 500);
-    if(read_byte == -1){
-        //we have received an EOF signal. Create an EOF packet
-        //which has "zero length payload", and we should also push this packet in the buffer
-//        packet->data = ()0;
-        packet->len =  (uint16_t) 12;
-    }else if (read_byte == 0){
-        free(packet);
-        return NULL; // the lib will call rel_read again on its own
-    }else{
+    /*First we need to check if there is still space in sender sliding window buffer*/
+    //
+    int SND_UNA = s->SND_UNA;
+    int SND_NXT = s->SND_NXT;
+    int MAXWND = s->MAXWND;
+    if(SND_NXT - SND_UNA < MAXWND) {
+        //there is still space in the sliding window
+        //allocate space for a packet
+        packet_t *packet = (packet_t *) xmalloc(512);
+        //read from conn_input, it returns the number of bytes
+        // 0 if there is no data currently available, and -1 on EOF or error.
+        int read_byte = conn_input(r->c, packet->data, 500);
+        if (read_byte == -1) {
+            //we have received an EOF signal. Create an EOF packet
+            //which has "zero length payload", and we should also push this packet in the buffer
+            //        packet->data = ()0;
+            packet->len = htons((uint16_t) 12);
+            packet->ackno = htonl((uint32_t) 0); //EOF packet, ackno doesn't matter
+            packet->seqno = htonl((uint32_t) SND_NXT);
+            //moving the sliding window
+            s->SND_NXT = s->SND_NXT + 1;
+
+            packet->cksum = (uint16_t) 0;
+            packet->cksum = cksum(packet->data, packet->len);
+
+            //finished packing the EOF packek, push it into the send buffer
+            buffer_insert(s->send_buffer, packet, get_current_system_time());
+
+
+        } else if (read_byte == 0) {
+            free(packet);
+            return NULL; // the lib will call rel_read again on its own
+        } else {
+            packet->len = (uint16_t)(12 + read_byte);
+            packet->ackno = (uint32_t) 0; //data packet, ackno doesn't matter
+            packet->cksum = (uint16_t) 0;
+            packet->cksum = cksum(packet->data, packet->len);
+
+            //finished packing the data packek, push it into the send buffer
+            buffer_insert(s->send_buffer, packet, get_current_system_time());
+
+        }
 
     }
-
-
+    return NULL;
 }
 
 void
@@ -165,4 +192,12 @@ rel_timer ()
         // ...
         current = rel_list->next;
     }
+}
+
+long get_current_system_time()
+{ // now in milliseconds
+    struct timeval now;
+    gettimeofday(&now, NULL);
+    long now_ms = now.tv_sec * 1000 + now.tv_usec / 1000;
+    return now_ms;
 }
