@@ -135,10 +135,13 @@ rel_read (rel_t *s)
     // 0 if there is no data currently available, and -1 on EOF or error.
     int read_byte = conn_input(r->c, packet->data, 500);
     if(read_byte == -1){
-
+        //we have received an EOF signal. Create an EOF packet
+        //which has "zero length payload", and we should also push this packet in the buffer
+//        packet->data = ()0;
+        packet->len =  (uint16_t) 12;
     }else if (read_byte == 0){
         free(packet);
-        return NULL;
+        return NULL; // the lib will call rel_read again on its own
     }else{
 
     }
