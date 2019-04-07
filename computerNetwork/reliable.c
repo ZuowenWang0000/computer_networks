@@ -85,19 +85,17 @@ const struct config_common *cc)
     rel_list = r;
 
     /* Do any other initialization you need here... */
-    // ...
+    // initialize the buffers
     r->send_buffer = xmalloc(sizeof(buffer_t));
     r->send_buffer->head = NULL;
-    // ...
     r->rec_buffer = xmalloc(sizeof(buffer_t));
     r->rec_buffer->head = NULL;
-    // ...
     //set SND.UNA, SND.NXT, RCV.NXT = 0
     r->SND_UNA = r->SND_NXT = r->RCV_NXT = 0;
     //read max window size from the configuration parameters via the command
-    r->MAXWND = cc->window
+    r->MAXWND = cc->window;
     //read timeout from the configuration parameters passed via the command
-    r->timeout = cc->timeout
+    r->timeout = cc->timeout;
 
     return r;
 }
@@ -130,7 +128,22 @@ rel_recvpkt (rel_t *r, packet_t *pkt, size_t n)
 void
 rel_read (rel_t *s)
 {
-    /* Your logic implementation here */
+    /*First we let input data flow into packets*/
+    //allocate space for a packet
+    packet_t* packet = (packet_t*)xmalloc(512);
+    //read from conn_input, it returns the number of bytes
+    // 0 if there is no data currently available, and -1 on EOF or error.
+    int read_byte = conn_input(r->c, packet->data, 500);
+    if(read_byte == -1){
+
+    }else if (read_byte == 0){
+        free(packet);
+        return NULL;
+    }else{
+
+    }
+
+
 }
 
 void
