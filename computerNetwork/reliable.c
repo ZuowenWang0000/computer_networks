@@ -155,6 +155,25 @@ rel_recvpkt (rel_t *r, packet_t *pkt, size_t n)
 //        If the received data packet(including EOF and Data) were not acked, we push it into the receiver buffer
 //        Otherwise we simply ack again(maybe the ack packet got lost in the network)
         if(packet_seqno >= r->RCV_NXT){
+//            we push packet into the receive buffer(if there is space in the window)
+//            since the buffer_insert method will place the packet with the order of pac->seqno.
+//            we only need to check if the buffer size w.r.t MAXWND
+            int MAXWND = r->MAXWND;
+
+            if(buffer_size(r->rec_buffer) < (uint32_t) MAXWND ){
+//              we still got space in the receive window
+                buffer_insert(r->rec_buffer, pkt, get_current_system_time());
+
+//              OK now we plug this packet into the buffer
+//              let's flush all in order packets in the receiving buffer into output
+//              until we reached an insuccesive one.
+
+
+
+            }else{//no space in the receive buffer. return without doing anything
+                return;
+            }
+
 
         }else{ //packet_seqno < r->RCV_NXT
 //            make an ack packet with ackno = seqno + 1 and send it.

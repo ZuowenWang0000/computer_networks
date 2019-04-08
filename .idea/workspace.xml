@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="BookmarkManager">
-    <bookmark url="file://$PROJECT_DIR$/computerNetwork/reliable.c" line="184" mnemonic="9" />
+    <bookmark url="file://$PROJECT_DIR$/computerNetwork/reliable.c" line="217" mnemonic="9" />
   </component>
   <component name="CMakeRunConfigurationManager" shouldGenerate="true" shouldDeleteObsolete="true">
     <generated />
@@ -27,8 +27,17 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/computerNetwork/reliable.c">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="353">
-              <caret line="145" column="74" selection-start-line="145" selection-start-column="74" selection-end-line="145" selection-end-column="74" />
+            <state relative-caret-position="449">
+              <caret line="169" column="16" selection-start-line="169" selection-start-column="16" selection-end-line="169" selection-end-column="16" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/computerNetwork/buffer.h">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="232">
+              <caret line="94" column="9" selection-start-line="94" selection-start-column="9" selection-end-line="94" selection-end-column="9" />
             </state>
           </provider>
         </entry>
@@ -36,7 +45,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/computerNetwork/rlib.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="206">
+            <state relative-caret-position="2546">
               <caret line="203" column="9" selection-start-line="203" selection-start-column="9" selection-end-line="203" selection-end-column="9" />
             </state>
           </provider>
@@ -45,7 +54,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/computerNetwork/cplayground/rlib.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="3659">
+            <state relative-caret-position="1337">
               <caret line="266" column="20" selection-start-line="266" selection-start-column="20" selection-end-line="266" selection-end-column="39" />
             </state>
           </provider>
@@ -59,8 +68,17 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/project1_don't look!/reliable.c">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="281">
-              <caret line="455" column="38" selection-start-line="455" selection-start-column="38" selection-end-line="455" selection-end-column="38" />
+            <state relative-caret-position="31">
+              <caret line="477" column="19" selection-start-line="477" selection-start-column="8" selection-end-line="477" selection-end-column="19" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/project1_don't look!/rlib.h">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="233">
+              <caret line="203" column="9" selection-start-line="203" selection-start-column="9" selection-end-line="203" selection-end-column="9" />
             </state>
           </provider>
         </entry>
@@ -68,8 +86,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/project1_don't look!/buffer.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="233">
-              <caret line="78" column="9" selection-start-line="78" selection-start-column="9" selection-end-line="78" selection-end-column="9" />
+            <state relative-caret-position="205">
+              <caret line="68" column="5" selection-start-line="68" selection-start-column="5" selection-end-line="68" selection-end-column="5" />
             </state>
           </provider>
         </entry>
@@ -77,7 +95,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/computerNetwork/rlib.c">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="9972">
+            <state relative-caret-position="191">
               <caret line="554" column="5" selection-start-line="554" selection-end-line="554" selection-end-column="5" />
             </state>
           </provider>
@@ -96,7 +114,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>usr/</find>
       <find>usr/lib</find>
       <find>computeCHecksum</find>
       <find>window</find>
@@ -104,16 +121,29 @@
       <find>send_buffer</find>
       <find>conn</find>
       <find>makePacFromInput</find>
-      <find>xmalloc</find>
       <find>conn_input</find>
       <find>packetToNetworkOrder</find>
       <find>sender_window_sliding_send</find>
       <find>savePacketToSendBuffer</find>
       <find>ACKNO</find>
       <find>get_current_system_time</find>
-      <find>cksum</find>
-      <find>cksum(</find>
       <find>computeCheck</find>
+      <find>rec_window_sliding_data</find>
+      <find>memset</find>
+      <find>mem</find>
+      <find>cksum(</find>
+      <find>RCV_NXT</find>
+      <find>makeAndSendAck</find>
+      <find>ack_size</find>
+      <find>xmalloc</find>
+      <find>makeANDsendAck</find>
+      <find>pacpreprocess</find>
+      <find>pacPreprocess</find>
+      <find>cksum</find>
+      <find>packet-&gt;data</find>
+      <find>computeChecksum</find>
+      <find>conn_sendpkt(</find>
+      <find>ack_packet</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -131,7 +161,6 @@
   </component>
   <component name="OCFindUsagesOptions" text="true" ivars="false" properties="true" derivedClasses="false" />
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="1920" />
     <option name="width" value="1920" />
     <option name="height" value="1080" />
   </component>
@@ -204,7 +233,7 @@
       <workItem from="1554399702277" duration="11768000" />
       <workItem from="1554550310240" duration="597000" />
       <workItem from="1554638788794" duration="11358000" />
-      <workItem from="1554666744091" duration="8745000" />
+      <workItem from="1554666744091" duration="16297000" />
     </task>
     <task id="LOCAL-00001" summary="set up repo">
       <created>1554208432968</created>
@@ -248,17 +277,31 @@
       <option name="project" value="LOCAL" />
       <updated>1554712633869</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="set up repo">
+      <created>1554718144946</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1554718144946</updated>
+    </task>
+    <task id="LOCAL-00008" summary="set up repo">
+      <created>1554726328005</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1554726328005</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="41417000" />
+    <option name="totallyTimeSpent" value="48969000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="1920" y="0" width="1920" height="1080" extended-state="6" />
+    <frame x="0" y="0" width="1920" height="1080" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.19546436" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.19546436" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -270,7 +313,7 @@
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Database Changes" order="7" />
       <window_info anchor="bottom" id="Version Control" order="8" />
-      <window_info anchor="bottom" id="Terminal" order="9" visible="true" weight="0.17594655" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="9" visible="true" weight="0.17817372" />
       <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -318,13 +361,6 @@
     <entry file="file://$PROJECT_DIR$/project1_don't look!/rlib.c">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/project1_don't look!/rlib.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="447">
-          <caret line="83" column="22" selection-start-line="83" selection-start-column="22" selection-end-line="83" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/computerNetwork/stripsol">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="324">
@@ -354,16 +390,6 @@
     <entry file="file://$PROJECT_DIR$/computerNetwork/cplayground/buffer.h">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/project1_don't look!/buffer.c">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/computerNetwork/rlib.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="9972">
-          <caret line="554" column="5" selection-start-line="554" selection-end-line="554" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/computerNetwork/cplayground/test.c">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="342">
@@ -371,45 +397,62 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/computerNetwork/buffer.h">
+    <entry file="file://$PROJECT_DIR$/project1_don't look!/buffer.c">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/computerNetwork/rlib.c">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="18">
-          <caret line="40" column="2" selection-start-line="40" selection-start-column="2" selection-end-line="40" selection-end-column="2" />
+        <state relative-caret-position="191">
+          <caret line="554" column="5" selection-start-line="554" selection-end-line="554" selection-end-column="5" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/computerNetwork/cplayground/rlib.h">
+    <entry file="file://$PROJECT_DIR$/project1_don't look!/rlib.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3659">
-          <caret line="266" column="20" selection-start-line="266" selection-start-column="20" selection-end-line="266" selection-end-column="39" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/computerNetwork/rlib.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="206">
+        <state relative-caret-position="233">
           <caret line="203" column="9" selection-start-line="203" selection-start-column="9" selection-end-line="203" selection-end-column="9" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/project1_don't look!/buffer.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="233">
-          <caret line="78" column="9" selection-start-line="78" selection-start-column="9" selection-end-line="78" selection-end-column="9" />
+        <state relative-caret-position="205">
+          <caret line="68" column="5" selection-start-line="68" selection-start-column="5" selection-end-line="68" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/computerNetwork/rlib.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2546">
+          <caret line="203" column="9" selection-start-line="203" selection-start-column="9" selection-end-line="203" selection-end-column="9" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/computerNetwork/cplayground/rlib.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1337">
+          <caret line="266" column="20" selection-start-line="266" selection-start-column="20" selection-end-line="266" selection-end-column="39" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/project1_don't look!/reliable.c">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="281">
-          <caret line="455" column="38" selection-start-line="455" selection-start-column="38" selection-end-line="455" selection-end-column="38" />
+        <state relative-caret-position="31">
+          <caret line="477" column="19" selection-start-line="477" selection-start-column="8" selection-end-line="477" selection-end-column="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/computerNetwork/buffer.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="232">
+          <caret line="94" column="9" selection-start-line="94" selection-start-column="9" selection-end-line="94" selection-end-column="9" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/computerNetwork/reliable.c">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="353">
-          <caret line="145" column="74" selection-start-line="145" selection-start-column="74" selection-end-line="145" selection-end-column="74" />
+        <state relative-caret-position="449">
+          <caret line="169" column="16" selection-start-line="169" selection-start-column="16" selection-end-line="169" selection-end-column="16" />
         </state>
       </provider>
     </entry>
