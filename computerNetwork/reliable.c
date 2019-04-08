@@ -60,6 +60,9 @@ struct reliable_state {
     int RCV_NXT; int RCV_WND;
 
     int ENV_ACK;
+
+//    use a EOF_ERR_FLAG to mark the read of eof or err from the sender side
+    int EOF_ERR_FLAG;
 };
 rel_t *rel_list;
 
@@ -103,6 +106,8 @@ const struct config_common *cc)
     r->timeout = cc->timeout;
     //begining ackno = 1
     r->ENV_ACK = 1;
+    //EOF-ERR-FLAG
+    r->EOF_ERR_FLAG = 0;
 
     return r;
 }
@@ -129,7 +134,6 @@ rel_destroy (rel_t *r)
 void
 rel_recvpkt (rel_t *r, packet_t *pkt, size_t n)
 {
-    //TODO can receive ack, eof or data , need to distinguish them
     //we first check if the packet is corrupted or not. If so, discard this packet（namely, do nothing）
     uint16_t packet_length = ntohs(pkt->len);
     uint16_t packet_cksum = ntohs(pkt->cksum);
@@ -167,7 +171,53 @@ rel_recvpkt (rel_t *r, packet_t *pkt, size_t n)
 //              OK now we plug this packet into the buffer
 //              let's flush all in order packets in the receiving buffer into output
 //              until we reached an insuccesive one.
+                buffer_node_t* first_node = buffer_get_first(r->rec_buffer);
+                packet_t* packet = &(first_node->packet);
+                while((ntohl(packet->seqno) == (uint32_t) r->RCV_NXT) && (first_node != NULL)){
+                    if(is_EOF(packet)){
+                        //If we reached the EOF, we tell the conn_output and destroy the connection
+                        conn_output(r->c, packet->data, 0); //send a signal to output by calling conn_output with len 0
+                        //send an ackno to the sender side
 
+                        struct ack_packet* ack_pac = xmalloc(sizeof(struct ack_packet));
+                        ack_pac->ackno = htonl((uint32_t) (packet_seqno + 1));
+                        ack_pac->len = htons ((uint16_t) 8);
+                        ack_pac->cksum = (uint16_t) 0;
+                        ack_pac->cksum = cksum(ack_pac, (int) 8);
+
+                        conn_sendpkt(r->c, (packet_t *)ack_pac, (size_t) 8);
+                        free(ack_pac);
+
+                        //destroy the connection
+                        if(r->EOF_ERR_FLAG == 1){
+                            rel_destroy(r);
+                        }
+
+                    }else{
+                        //flush the normal data to the output
+                        while(conn_bufspace(r->c) < (packet->len)){
+                            //spin
+                        }
+
+                        int bytes_flushed = conn_output(r->c, packet->data, (size_t) (packet_length - 12));
+                        fprintf(stderr, "bytes_flushed : %d", bytes_flushed);
+
+                        struct ack_packet* ack_pac = xmalloc(sizeof(struct ack_packet));
+                        ack_pac->ackno = htonl((uint32_t) (packet_seqno + 1));
+                        ack_pac->len = htons ((uint16_t) 8);
+                        ack_pac->cksum = (uint16_t) 0;
+                        ack_pac->cksum = cksum(ack_pac, (int) 8);
+
+                        conn_sendpkt(r->c, (packet_t *)ack_pac, (size_t) 8);
+                        free(ack_pac);
+
+                    }
+
+                    buffer_remove_first(r->rec_buffer); //remove either EOF or Data packet whatever
+                    r->RCV_NXT ++;
+                    first_node = buffer_get_first(r->rec_buffer);
+                    packet = &(first_node->packet);
+                }
 
 
             }else{//no space in the receive buffer. return without doing anything
@@ -183,7 +233,7 @@ rel_recvpkt (rel_t *r, packet_t *pkt, size_t n)
             ack_pac->cksum = (uint16_t) 0;
             ack_pac->cksum = cksum(ack_pac, (int) 8);
 
-            conn_sendpkt(r->c, ack_pac, (size_t) 8);
+            conn_sendpkt(r->c, (packet_t *)ack_pac, (size_t) 8);
             free(ack_pac);
         }
 
@@ -211,7 +261,8 @@ rel_read (rel_t *s)
         // 0 if there is no data currently available, and -1 on EOF or error.
         int read_byte = conn_input(s->c, packet->data, 500);
         if (read_byte == -1) {
-            //we have received an EOF signal. Create an EOF packet
+            //we have received an EOF signal. Create an EOF packet and Mark it with the Flag
+            s->EOF_ERR_FLAG = 1;
             //which has "zero length payload", and we should also push this packet in the buffer
             //        packet->data = ()0;
             packet->len = htons((uint16_t) 12);
