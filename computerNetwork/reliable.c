@@ -154,7 +154,7 @@ rel_recvpkt (rel_t *r, packet_t *pkt, size_t n)
 //        fprintf(stderr, "new cksum: %d",ntohs(cksum(pkt, (int) packet_length)));
 
 
-        fprintf(stderr, "packet corrupted!\n");
+        fprintf(stderr, "\npacket corrupted!\n");
         return;
     }
 
@@ -165,7 +165,7 @@ rel_recvpkt (rel_t *r, packet_t *pkt, size_t n)
         //set up the sliding window
         //TODO double check this one, not sure should be ackno-1 or ackno
         r->SND_UNA = (int) ntohl(pkt->ackno);
-        fprintf(stderr, "removed acked packets : %d", acked_packet_number);
+        fprintf(stderr, "\nremoved acked packets : %d\n", acked_packet_number);
         //since sliding window moved now, we can read more data if there is any
         rel_read(r);
 //        return NULL;
@@ -276,14 +276,14 @@ void
 rel_output (rel_t *r)
 {
 
-//              let's flush all in order packets in the receiving buffer into output
-//              until we reached an insuccesive one.
+//  let's flush all in order packets in the receiving buffer into output
+//  until we reached an insuccesive one.
     buffer_node_t* first_node = xmalloc(sizeof(buffer_node_t));
     first_node = buffer_get_first(r->rec_buffer);
 
     packet_t* packet = &(first_node->packet);
     uint16_t packet_length = ntohs(packet->len);
-//    uint16_t packet_cksum = ntohs(packet->cksum);
+//  uint16_t packet_cksum = ntohs(packet->cksum);
     uint16_t packet_seqno = ntohl(packet->seqno);
     while((first_node != NULL) && (ntohl(packet->seqno) == (uint32_t) r->RCV_NXT)){
         if(is_EOF(packet)){
@@ -309,7 +309,7 @@ rel_output (rel_t *r)
         }else{
             //flush the normal data to the output
             int bytes_flushed = conn_output(r->c, packet->data, (size_t) (packet_length - 12));
-//            fprintf(stderr, "bytes_flushed : %d", bytes_flushed);
+            fprintf(stderr, "\nbytes_flushed : %d\n", bytes_flushed);
 
             struct ack_packet* ack_pac = xmalloc(sizeof(struct ack_packet));
             ack_pac->ackno = htonl((uint32_t) (packet_seqno + 1));
@@ -340,7 +340,7 @@ rel_timer ()
         buffer_node_t* node = buffer_get_first(current->send_buffer);
         packet_t* packet;
 //        currently only checking the first 3 un-acked pac
-        int i = 3;
+        int i = 1;
         while(i > 0 && node != NULL){
             packet = &node->packet;
             long cur_time = get_current_system_time();
@@ -372,7 +372,7 @@ long get_current_system_time()
 }
 
 int is_EOF(packet_t* packet){
-    if(packet->len == (uint16_t) 12){
+    if(ntohs(packet->len) == (uint16_t) 12){
         return 1;
     }else{
         return 0;
@@ -380,7 +380,7 @@ int is_EOF(packet_t* packet){
 }
 
 int is_ACK(packet_t* packet){
-    if(packet->len == (uint16_t) 8){
+    if(ntohs(packet->len) == (uint16_t) 8){
         return 1;
     }else{
         return 0;
