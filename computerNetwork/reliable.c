@@ -123,7 +123,7 @@ rel_destroy (rel_t *r)
 void
 rel_recvpkt (rel_t *r, packet_t *pkt, size_t n)
 {
-    /* Your logic implementation here */
+    //TODO can reiceive ack, eof or data , need to distinguish them
 }
 
 void
@@ -156,20 +156,27 @@ rel_read (rel_t *s)
 
             //finished packing the EOF packek, push it into the send buffer
             buffer_insert(s->send_buffer, packet, get_current_system_time());
-
+            conn_sendpkt(s->c, packet, (size_t) 12);
+            free(packet);
 
         } else if (read_byte == 0) {
             free(packet);
             return NULL; // the lib will call rel_read again on its own
         } else {
-            packet->len = (uint16_t)(12 + read_byte);
-            packet->ackno = (uint32_t) 0; //data packet, ackno doesn't matter
+            packet->len = htons((uint16_t)(12 + read_byte));
+            packet->ackno = htonl((uint32_t) 0); //data packet, ackno doesn't matter
+            packet->cksum = htons((uint16_t) 0);
+            packet->seqno = htonl((uint32_t) SND_NXT);
+            //moving the sliding window
+            s->SND_NXT = s->SND_NXT + 1;
+
             packet->cksum = (uint16_t) 0;
             packet->cksum = cksum(packet->data, packet->len);
 
             //finished packing the data packek, push it into the send buffer
             buffer_insert(s->send_buffer, packet, get_current_system_time());
-
+            conn_sendpkt(s->c, packet, (size_t) 12 + read_byte);
+            free(packet);
         }
 
     }
