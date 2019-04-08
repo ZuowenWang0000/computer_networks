@@ -131,14 +131,15 @@ rel_recvpkt (rel_t *r, packet_t *pkt, size_t n)
 {
     //TODO can receive ack, eof or data , need to distinguish them
     //we first check if the packet is corrupted or not. If so, discard this packet（namely, do nothing）
-    (uint16_t) packet_length = ntohs(pkt->len);
-    (uint16_t) packet_cksum = ntohs(pkt->cksum);
+    uint16_t packet_length = ntohs(pkt->len);
+    uint16_t packet_cksum = ntohs(pkt->cksum);
+    uint16_t packet_seqno = ntohl(pkt->seqno);
     if((packet_length != (uint16_t) n) || (packet_cksum != ntohs(cksum(pkt->data, (int) packet_length)))){
         fprintf(stderr, "packet corrupted!\n");
-        return NULL;
+//        return NULL;
     }
 
-    //distinguish ACK. EOF. Data
+    //distinguish ACK. (EOF. Data)
     if (is_ACK(pkt)){
         //if the received packet is ack, then we remove (ack) all packet with seqno number < ackno in the send buffer
         int acked_packet_number = buffer_remove(r->send_buffer, ntohl(pkt->ackno));
@@ -148,12 +149,25 @@ rel_recvpkt (rel_t *r, packet_t *pkt, size_t n)
         fprintf(stderr, "removed acked packets : %d", acked_packet_number);
         //since sliding window moved now, we can read more data if there is any
         rel_read(r);
-        return NULL;
-    }else if(is_EOF(pkt)){
+//        return NULL;
+    }else{//EOF and normal data packets are both data packets, share some commonality,
+//        Thus we handle them together
+//        If the received data packet(including EOF and Data) were not acked, we push it into the receiver buffer
+//        Otherwise we simply ack again(maybe the ack packet got lost in the network)
+        if(packet_seqno >= r->RCV_NXT){
 
+        }else{ //packet_seqno < r->RCV_NXT
+//            make an ack packet with ackno = seqno + 1 and send it.
+            struct ack_packet* ack_pac = xmalloc(sizeof(struct ack_packet));
+            ack_pac->ackno = htonl((uint32_t) (packet_seqno + 1));
+            ack_pac->len = htons ((uint16_t) 8);
+            ack_pac->cksum = (uint16_t) 0;
+            ack_pac->cksum = cksum(ack_pac, (int) 8);
 
+            conn_sendpkt(r->c, ack_pac, (size_t) 8);
+            free(ack_pac);
+        }
 
-    }else{// data packet
 
 
 
@@ -176,7 +190,7 @@ rel_read (rel_t *s)
         packet_t *packet = (packet_t *) xmalloc(512);
         //read from conn_input, it returns the number of bytes
         // 0 if there is no data currently available, and -1 on EOF or error.
-        int read_byte = conn_input(r->c, packet->data, 500);
+        int read_byte = conn_input(s->c, packet->data, 500);
         if (read_byte == -1) {
             //we have received an EOF signal. Create an EOF packet
             //which has "zero length payload", and we should also push this packet in the buffer
@@ -188,7 +202,7 @@ rel_read (rel_t *s)
             s->SND_NXT = s->SND_NXT + 1;
 
             packet->cksum = (uint16_t) 0;
-            packet->cksum = cksum(packet->data, 12);
+            packet->cksum = cksum(packet, 12);
 
             //finished packing the EOF packek, push it into the send buffer
             buffer_insert(s->send_buffer, packet, get_current_system_time());
@@ -197,7 +211,7 @@ rel_read (rel_t *s)
 
         } else if (read_byte == 0) {
             free(packet);
-            return NULL; // the lib will call rel_read again on its own
+//            return NULL; // the lib will call rel_read again on its own
         } else {
             packet->len = htons((uint16_t)(12 + read_byte));
             packet->ackno = htonl((uint32_t) 0); //data packet, ackno doesn't matter
@@ -207,7 +221,7 @@ rel_read (rel_t *s)
             s->SND_NXT = s->SND_NXT + 1;
 
             packet->cksum = (uint16_t) 0;
-            packet->cksum = cksum(packet->data, 12 + read_byte);
+            packet->cksum = cksum(packet, 12 + read_byte);
 
             //finished packing the data packek, push it into the send buffer
             buffer_insert(s->send_buffer, packet, get_current_system_time());
@@ -216,7 +230,7 @@ rel_read (rel_t *s)
         }
 
     }
-    return NULL;
+//    return NULL;
 }
 
 void
