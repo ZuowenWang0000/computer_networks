@@ -23,6 +23,8 @@
  * data max length = 500
  */
 long get_current_system_time();
+int is_EOF(packet_t* packet);
+int is_ACK(packet_t* packet);
 
 struct reliable_state {
     rel_t *next;			/* Linked list for traversing all connections */
@@ -56,6 +58,8 @@ struct reliable_state {
  *                               c. send back ACK with cumulative ackno = RCV.NXT
  */
     int RCV_NXT; int RCV_WND;
+
+    int ENV_ACK;
 };
 rel_t *rel_list;
 
@@ -97,6 +101,8 @@ const struct config_common *cc)
     r->MAXWND = cc->window;
     //read timeout from the configuration parameters passed via the command
     r->timeout = cc->timeout;
+    //begining ackno = 1
+    r->ENV_ACK = 1;
 
     return r;
 }
@@ -123,7 +129,37 @@ rel_destroy (rel_t *r)
 void
 rel_recvpkt (rel_t *r, packet_t *pkt, size_t n)
 {
-    //TODO can reiceive ack, eof or data , need to distinguish them
+    //TODO can receive ack, eof or data , need to distinguish them
+    //we first check if the packet is corrupted or not. If so, discard this packet（namely, do nothing）
+    (uint16_t) packet_length = ntohs(pkt->len);
+    (uint16_t) packet_cksum = ntohs(pkt->cksum);
+    if((packet_length != (uint16_t) n) || (packet_cksum != ntohs(cksum(pkt->data, (int) packet_length)))){
+        fprintf(stderr, "packet corrupted!\n");
+        return NULL;
+    }
+
+    //distinguish ACK. EOF. Data
+    if (is_ACK(pkt)){
+        //if the received packet is ack, then we remove (ack) all packet with seqno number < ackno in the send buffer
+        int acked_packet_number = buffer_remove(r->send_buffer, ntohl(pkt->ackno));
+        //set up the sliding window
+        //TODO double check this one, not sure should be ackno-1 or ackno
+        r->SND_UNA = (int) ntohl(pkt->ackno);
+        fprintf(stderr, "removed acked packets : %d", acked_packet_number);
+        //since sliding window moved now, we can read more data if there is any
+        rel_read(r);
+        return NULL;
+    }else if(is_EOF(pkt)){
+
+
+
+    }else{// data packet
+
+
+
+    }
+
+
 }
 
 void
@@ -152,7 +188,7 @@ rel_read (rel_t *s)
             s->SND_NXT = s->SND_NXT + 1;
 
             packet->cksum = (uint16_t) 0;
-            packet->cksum = cksum(packet->data, packet->len);
+            packet->cksum = cksum(packet->data, 12);
 
             //finished packing the EOF packek, push it into the send buffer
             buffer_insert(s->send_buffer, packet, get_current_system_time());
@@ -171,7 +207,7 @@ rel_read (rel_t *s)
             s->SND_NXT = s->SND_NXT + 1;
 
             packet->cksum = (uint16_t) 0;
-            packet->cksum = cksum(packet->data, packet->len);
+            packet->cksum = cksum(packet->data, 12 + read_byte);
 
             //finished packing the data packek, push it into the send buffer
             buffer_insert(s->send_buffer, packet, get_current_system_time());
@@ -207,4 +243,20 @@ long get_current_system_time()
     gettimeofday(&now, NULL);
     long now_ms = now.tv_sec * 1000 + now.tv_usec / 1000;
     return now_ms;
+}
+
+int is_EOF(packet_t* packet){
+    if(packet->len == (uint16_t) 12){
+        return 1;
+    }else{
+        return 0;
+    }
+}
+
+int is_ACK(packet_t* packet){
+    if(packet->len == (uint16_t) 8){
+        return 1;
+    }else{
+        return 0;
+    }
 }
