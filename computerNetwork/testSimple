@@ -2,6 +2,14 @@
 
 ./reliable 5555 -w 5 localhost:6666
 
+./reliable 6666 -w 2 localhost:5555
+
+./reliable 5555 -w 2 localhost:6666
+
+./reliable 6666 -w 12 localhost:5555
+
+./reliable 5555 -w 12 localhost:6666
+
 run 6666 -w 5 localhost:5555
 
 run 5555 -w 5 localhost:6666
