@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="BookmarkManager">
-    <bookmark url="file://$PROJECT_DIR$/computerNetwork/reliable.c" line="230" mnemonic="9" />
-    <bookmark url="file://$PROJECT_DIR$/computerNetwork/reliable.c" line="330" />
+    <bookmark url="file://$PROJECT_DIR$/computerNetwork/reliable.c" line="237" mnemonic="9" />
+    <bookmark url="file://$PROJECT_DIR$/computerNetwork/reliable.c" line="340" />
   </component>
   <component name="CMakeRunConfigurationManager" shouldGenerate="true" shouldDeleteObsolete="true">
     <generated />
@@ -28,8 +28,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/computerNetwork/reliable.c">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="497">
-              <caret line="370" lean-forward="true" selection-start-line="370" selection-end-line="370" />
+            <state relative-caret-position="297">
+              <caret line="313" column="76" lean-forward="true" selection-start-line="313" selection-start-column="76" selection-end-line="313" selection-end-column="76" />
             </state>
           </provider>
         </entry>
@@ -37,8 +37,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/project1_don't look!/reliable.c">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="531">
-              <caret line="250" column="47" selection-start-line="250" selection-start-column="47" selection-end-line="250" selection-end-column="55" />
+            <state relative-caret-position="243">
+              <caret line="276" column="24" selection-start-line="276" selection-start-column="9" selection-end-line="276" selection-end-column="24" />
             </state>
           </provider>
         </entry>
@@ -83,10 +83,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>conn</find>
-      <find>makePacFromInput</find>
-      <find>conn_input</find>
-      <find>packetToNetworkOrder</find>
       <find>sender_window_sliding_send</find>
       <find>savePacketToSendBuffer</find>
       <find>ACKNO</find>
@@ -105,7 +101,6 @@
       <find>pacPreprocess</find>
       <find>cksum</find>
       <find>packet-&gt;data</find>
-      <find>computeChecksum</find>
       <find>ack_packet</find>
       <find>conn_sendpkt(</find>
       <find>conn_bu</find>
@@ -113,6 +108,11 @@
       <find>passDataToConnOutput</find>
       <find>conn_sendpkt</find>
       <find>rel_output</find>
+      <find>packet_seqno</find>
+      <find>packet_cksum</find>
+      <find>packet_</find>
+      <find>packet corrupted</find>
+      <find>computeChecksum</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -130,6 +130,7 @@
   </component>
   <component name="OCFindUsagesOptions" text="true" ivars="false" properties="true" derivedClasses="false" />
   <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="1920" />
     <option name="width" value="1920" />
     <option name="height" value="1080" />
   </component>
@@ -155,11 +156,6 @@
               <item name="computer_networks" type="462c0819:PsiDirectoryNode" />
               <item name="computerNetwork" type="462c0819:PsiDirectoryNode" />
               <item name="cplayground" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="computer_networks" type="b2602c69:ProjectViewProjectNode" />
-              <item name="computer_networks" type="462c0819:PsiDirectoryNode" />
-              <item name="project1_don't look!" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -207,7 +203,7 @@
       <workItem from="1554399702277" duration="11768000" />
       <workItem from="1554550310240" duration="597000" />
       <workItem from="1554638788794" duration="11358000" />
-      <workItem from="1554666744091" duration="20991000" />
+      <workItem from="1554666744091" duration="23979000" />
     </task>
     <task id="LOCAL-00001" summary="set up repo">
       <created>1554208432968</created>
@@ -279,17 +275,30 @@
       <option name="project" value="LOCAL" />
       <updated>1554730794217</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="set up repo">
+      <created>1554732604943</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1554732604943</updated>
+    </task>
+    <task id="LOCAL-00012" summary="set up repo">
+      <created>1554732730273</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1554732730273</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="53663000" />
+    <option name="totallyTimeSpent" value="56651000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="0" width="1920" height="1080" extended-state="6" />
-    <editor active="true" />
+    <frame x="1920" y="0" width="1920" height="1080" extended-state="6" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" weight="0.19546436" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.19546436" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -300,13 +309,13 @@
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Database Changes" order="7" />
-      <window_info anchor="bottom" id="Version Control" order="8" />
+      <window_info anchor="bottom" id="Version Control" order="8" weight="0.32962137" />
       <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="right" id="Database" order="3" />
-      <window_info anchor="right" id="Terminal" order="4" weight="0.3061555" />
+      <window_info active="true" anchor="right" id="Terminal" order="4" visible="true" weight="0.3061555" />
     </layout>
     <layout-to-restore>
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.19546436" />
@@ -452,15 +461,15 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/project1_don't look!/reliable.c">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="531">
-          <caret line="250" column="47" selection-start-line="250" selection-start-column="47" selection-end-line="250" selection-end-column="55" />
+        <state relative-caret-position="243">
+          <caret line="276" column="24" selection-start-line="276" selection-start-column="9" selection-end-line="276" selection-end-column="24" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/computerNetwork/reliable.c">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="497">
-          <caret line="370" lean-forward="true" selection-start-line="370" selection-end-line="370" />
+        <state relative-caret-position="297">
+          <caret line="313" column="76" lean-forward="true" selection-start-line="313" selection-start-column="76" selection-end-line="313" selection-end-column="76" />
         </state>
       </provider>
     </entry>

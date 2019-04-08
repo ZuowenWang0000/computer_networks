@@ -141,11 +141,21 @@ rel_recvpkt (rel_t *r, packet_t *pkt, size_t n)
 {
     //we first check if the packet is corrupted or not. If so, discard this packet（namely, do nothing）
     uint16_t packet_length = ntohs(pkt->len);
-    uint16_t packet_cksum = ntohs(pkt->cksum);
+    uint16_t packet_cksum_old = ntohs(pkt->cksum);
     uint16_t packet_seqno = ntohl(pkt->seqno);
-    if((packet_length != (uint16_t) n) || (packet_cksum != ntohs(cksum(pkt->data, (int) packet_length)))){
+
+//        need to reset packet checksum to 0 before computing
+    pkt->cksum = (uint16_t) 0;
+
+    if((packet_length != (uint16_t) n) || (packet_cksum_old != ntohs(cksum(pkt, (int) packet_length)))){
+//        fprintf(stderr, "packet_length: %d", packet_length);
+//        fprintf(stderr, "expected length: %d", n);
+//        fprintf(stderr, "packet cksum: %d", packet_cksum_old);
+//        fprintf(stderr, "new cksum: %d",ntohs(cksum(pkt, (int) packet_length)));
+
+
         fprintf(stderr, "packet corrupted!\n");
-//        return NULL;
+        return;
     }
 
     //distinguish ACK. (EOF. Data)
@@ -197,11 +207,8 @@ rel_recvpkt (rel_t *r, packet_t *pkt, size_t n)
 
             conn_sendpkt(r->c, (packet_t *)ack_pac, (size_t) 8);
             free(ack_pac);
+            return ;
         }
-
-
-
-
     }
 
 
@@ -269,16 +276,16 @@ void
 rel_output (rel_t *r)
 {
 
-
-
 //              let's flush all in order packets in the receiving buffer into output
 //              until we reached an insuccesive one.
-    buffer_node_t* first_node = buffer_get_first(r->rec_buffer);
+    buffer_node_t* first_node = xmalloc(sizeof(buffer_node_t));
+    first_node = buffer_get_first(r->rec_buffer);
+
     packet_t* packet = &(first_node->packet);
     uint16_t packet_length = ntohs(packet->len);
 //    uint16_t packet_cksum = ntohs(packet->cksum);
     uint16_t packet_seqno = ntohl(packet->seqno);
-    while((ntohl(packet->seqno) == (uint32_t) r->RCV_NXT) && (first_node != NULL)){
+    while((first_node != NULL) && (ntohl(packet->seqno) == (uint32_t) r->RCV_NXT)){
         if(is_EOF(packet)){
             //If we reached the EOF, we tell the conn_output and destroy the connection
 
@@ -302,7 +309,7 @@ rel_output (rel_t *r)
         }else{
             //flush the normal data to the output
             int bytes_flushed = conn_output(r->c, packet->data, (size_t) (packet_length - 12));
-            fprintf(stderr, "bytes_flushed : %d", bytes_flushed);
+//            fprintf(stderr, "bytes_flushed : %d", bytes_flushed);
 
             struct ack_packet* ack_pac = xmalloc(sizeof(struct ack_packet));
             ack_pac->ackno = htonl((uint32_t) (packet_seqno + 1));
