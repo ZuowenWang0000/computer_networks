@@ -126,6 +126,11 @@ rel_destroy (rel_t *r)
     free(r->send_buffer);
     buffer_clear(r->rec_buffer);
     free(r->rec_buffer);
+//    free(r->EOF_ERR_FLAG);
+//    free(r->RCV_NXT);
+//    free(r->MAXWND);
+//    free(r->ENV_ACK);
+//    free(r->timeout);
     // ...
 
 }
@@ -167,56 +172,13 @@ rel_recvpkt (rel_t *r, packet_t *pkt, size_t n)
             if(buffer_size(r->rec_buffer) < (uint32_t) MAXWND ){
 //              we still got space in the receive window
                 buffer_insert(r->rec_buffer, pkt, get_current_system_time());
-
-//              OK now we plug this packet into the buffer
-//              let's flush all in order packets in the receiving buffer into output
-//              until we reached an insuccesive one.
-                buffer_node_t* first_node = buffer_get_first(r->rec_buffer);
-                packet_t* packet = &(first_node->packet);
-                while((ntohl(packet->seqno) == (uint32_t) r->RCV_NXT) && (first_node != NULL)){
-                    if(is_EOF(packet)){
-                        //If we reached the EOF, we tell the conn_output and destroy the connection
-                        conn_output(r->c, packet->data, 0); //send a signal to output by calling conn_output with len 0
-                        //send an ackno to the sender side
-
-                        struct ack_packet* ack_pac = xmalloc(sizeof(struct ack_packet));
-                        ack_pac->ackno = htonl((uint32_t) (packet_seqno + 1));
-                        ack_pac->len = htons ((uint16_t) 8);
-                        ack_pac->cksum = (uint16_t) 0;
-                        ack_pac->cksum = cksum(ack_pac, (int) 8);
-
-                        conn_sendpkt(r->c, (packet_t *)ack_pac, (size_t) 8);
-                        free(ack_pac);
-
-                        //destroy the connection
-                        if(r->EOF_ERR_FLAG == 1){
-                            rel_destroy(r);
-                        }
-
-                    }else{
-                        //flush the normal data to the output
-                        while(conn_bufspace(r->c) < (packet->len)){
-                            //spin
-                        }
-
-                        int bytes_flushed = conn_output(r->c, packet->data, (size_t) (packet_length - 12));
-                        fprintf(stderr, "bytes_flushed : %d", bytes_flushed);
-
-                        struct ack_packet* ack_pac = xmalloc(sizeof(struct ack_packet));
-                        ack_pac->ackno = htonl((uint32_t) (packet_seqno + 1));
-                        ack_pac->len = htons ((uint16_t) 8);
-                        ack_pac->cksum = (uint16_t) 0;
-                        ack_pac->cksum = cksum(ack_pac, (int) 8);
-
-                        conn_sendpkt(r->c, (packet_t *)ack_pac, (size_t) 8);
-                        free(ack_pac);
-
-                    }
-
-                    buffer_remove_first(r->rec_buffer); //remove either EOF or Data packet whatever
-                    r->RCV_NXT ++;
-                    first_node = buffer_get_first(r->rec_buffer);
-                    packet = &(first_node->packet);
+//              OK now we have plug this packet into the buffer
+                if(conn_bufspace(r->c) >= packet_length){
+                    rel_output(r);
+                }else{
+//                    TODO not sure if this implementation is correct or not, for now if the print buffer does not have enough space
+//                    it will simply return (and wait for the sender side to resend)
+                    return;
                 }
 
 
@@ -306,7 +268,55 @@ rel_read (rel_t *s)
 void
 rel_output (rel_t *r)
 {
-    /* Your logic implementation here */
+
+
+
+//              let's flush all in order packets in the receiving buffer into output
+//              until we reached an insuccesive one.
+    buffer_node_t* first_node = buffer_get_first(r->rec_buffer);
+    packet_t* packet = &(first_node->packet);
+    while((ntohl(packet->seqno) == (uint32_t) r->RCV_NXT) && (first_node != NULL)){
+        if(is_EOF(packet)){
+            //If we reached the EOF, we tell the conn_output and destroy the connection
+
+            conn_output(r->c, packet->data, 0); //send a signal to output by calling conn_output with len 0
+            //send an ackno to the sender side
+
+            struct ack_packet* ack_pac = xmalloc(sizeof(struct ack_packet));
+            ack_pac->ackno = htonl((uint32_t) (packet_seqno + 1));
+            ack_pac->len = htons ((uint16_t) 8);
+            ack_pac->cksum = (uint16_t) 0;
+            ack_pac->cksum = cksum(ack_pac, (int) 8);
+
+            conn_sendpkt(r->c, (packet_t *)ack_pac, (size_t) 8);
+            free(ack_pac);
+
+            //destroy the connection
+            if(r->EOF_ERR_FLAG == 1){
+                rel_destroy(r);
+            }
+
+        }else{
+            //flush the normal data to the output
+            int bytes_flushed = conn_output(r->c, packet->data, (size_t) (packet_length - 12));
+            fprintf(stderr, "bytes_flushed : %d", bytes_flushed);
+
+            struct ack_packet* ack_pac = xmalloc(sizeof(struct ack_packet));
+            ack_pac->ackno = htonl((uint32_t) (packet_seqno + 1));
+            ack_pac->len = htons ((uint16_t) 8);
+            ack_pac->cksum = (uint16_t) 0;
+            ack_pac->cksum = cksum(ack_pac, (int) 8);
+
+            conn_sendpkt(r->c, (packet_t *)ack_pac, (size_t) 8);
+            free(ack_pac);
+
+        }
+
+        buffer_remove_first(r->rec_buffer); //remove either EOF or Data packet whatever
+        r->RCV_NXT ++;
+        first_node = buffer_get_first(r->rec_buffer);
+        packet = &(first_node->packet);
+    }
 }
 
 void
@@ -316,7 +326,29 @@ rel_timer ()
     // all packets whose timer has expired
     rel_t *current = rel_list;
     while (current != NULL) {
-        // ...
+        // go over the sender buffer and resend expired un-acked packets
+        buffer_node_t* node = buffer_get_first(current->send_buffer);
+        packet_t* packet;
+//        currently only checking the first 3 un-acked pac
+        int i = 3;
+        while(i > 0 && node != NULL){
+            packet = node->packet;
+            long cur_time = get_current_system_time();
+            long last_time = node->last_retransmit;
+            long timeout = current->timeout;
+
+            if((cur_time - last_time) > timeout){
+                //timeout, resend packets
+                conn_sendpkt(current->c, packet, (size_t)(ntohs(packet->len)));
+                //also update the retransmittion time of this node
+                node->last_retransmit = cur_time;
+            }
+
+            i--;
+            node = node->next;
+        }
+
+
         current = rel_list->next;
     }
 }
