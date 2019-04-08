@@ -275,6 +275,9 @@ rel_output (rel_t *r)
 //              until we reached an insuccesive one.
     buffer_node_t* first_node = buffer_get_first(r->rec_buffer);
     packet_t* packet = &(first_node->packet);
+    uint16_t packet_length = ntohs(packet->len);
+//    uint16_t packet_cksum = ntohs(packet->cksum);
+    uint16_t packet_seqno = ntohl(packet->seqno);
     while((ntohl(packet->seqno) == (uint32_t) r->RCV_NXT) && (first_node != NULL)){
         if(is_EOF(packet)){
             //If we reached the EOF, we tell the conn_output and destroy the connection
@@ -332,7 +335,7 @@ rel_timer ()
 //        currently only checking the first 3 un-acked pac
         int i = 3;
         while(i > 0 && node != NULL){
-            packet = node->packet;
+            packet = &node->packet;
             long cur_time = get_current_system_time();
             long last_time = node->last_retransmit;
             long timeout = current->timeout;
