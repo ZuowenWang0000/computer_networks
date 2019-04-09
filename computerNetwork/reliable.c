@@ -245,13 +245,12 @@ rel_recvpkt (rel_t *r, packet_t *pkt, size_t n)
 }
 
 //void
-//rel_read (rel_t *s)
-//{
+//rel_read (rel_t *s) {
 //    /*First we need to check if there is still space in sender sliding window buffer*/
 //    int SND_UNA = s->SND_UNA;
 //    int SND_NXT = s->SND_NXT;
 //    int MAXWND = s->MAXWND;
-//    if((SND_NXT - SND_UNA < MAXWND)&& !(s->EOF_ERR_FLAG)) {
+//    if ((SND_NXT - SND_UNA < MAXWND) && !(s->EOF_ERR_FLAG)) {
 //        //there is still space in the sliding window
 //        //allocate space for a packet
 //        packet_t *packet = (packet_t *) xmalloc(512);
@@ -301,75 +300,11 @@ rel_recvpkt (rel_t *r, packet_t *pkt, size_t n)
 //            conn_sendpkt(s->c, packet, (size_t) 12 + read_byte);
 //            free(packet);
 //            rel_read(s);
+//            return;
 //        }
 //
 //    }
-////    return NULL;
 //}
-
-void
-rel_read (rel_t *s)
-{
-    /*First we need to check if there is still space in sender sliding window buffer*/
-    int SND_UNA = s->SND_UNA;
-    int SND_NXT = s->SND_NXT;
-    int MAXWND = s->MAXWND;
-    int read_byte;
-    packet_t *packet = (packet_t *) xmalloc(512);
-
-    while((SND_NXT - SND_UNA < MAXWND)&& (!(s->EOF_ERR_FLAG))) {
-        read_byte = conn_input(s->c, packet->data, 500);
-//        fprintf(stderr, "LOOOPING!!!!! \n");
-        //there is still space in the sliding window
-        //allocate space for a packet
-        if (read_byte == -1) {
-            //we have received an EOF signal. Create an EOF packet and Mark it with the Flag
-            s->EOF_ERR_FLAG = 1;
-            //which has "zero length payload", and we should also push this packet in the buffer
-            //        packet->data = ()0;
-            packet->len = htons((uint16_t) 12);
-            packet->ackno = htonl((uint32_t) 0); //EOF packet, ackno doesn't matter
-            packet->seqno = htonl((uint32_t) SND_NXT);
-            //moving the upper bound index
-            s->SND_NXT = s->SND_NXT + 1;
-
-            packet->cksum = (uint16_t) 0;
-            packet->cksum = cksum(packet, 12);
-
-            //finished packing the EOF packek, push it into the send buffer
-            buffer_insert(s->send_buffer, packet, get_current_system_time());
-            conn_sendpkt(s->c, packet, (size_t) 12);
-            free(packet);
-
-        } else if (read_byte == 0) {
-            free(packet);
-            break;
-// the lib will call rel_read again on its own, do not loop calling!
-        } else {
-            packet->len = htons((uint16_t)(12 + read_byte));
-            packet->ackno = htonl((uint32_t) 10); //data packet, ackno doesn't matter
-            packet->cksum = htons((uint16_t) 0);
-            packet->seqno = htonl((uint32_t) SND_NXT);
-//            fprintf(stderr, "packing data into pac_seq: %d\n", SND_NXT);
-
-            //moving the sliding window
-            s->SND_NXT = s->SND_NXT + 1;
-
-            packet->cksum = (uint16_t) 0;
-            packet->cksum = cksum(packet, 12 + read_byte);
-
-            //finished packing the data packet, push it into the send buffer
-            buffer_insert(s->send_buffer, packet, get_current_system_time());
-//            fprintf(stderr, "sender buffer size : %d ,  receiver buffer size : %d\n",
-//                    buffer_size(s->send_buffer),  buffer_size(s->rec_buffer));
-            conn_sendpkt(s->c, packet, (size_t) 12 + read_byte);
-            free(packet);
-        }
-        packet = (packet_t *) xmalloc(512);
-
-    }
-//    return NULL;
-}
 
 void
 rel_output (rel_t *r)
@@ -437,6 +372,146 @@ rel_output (rel_t *r)
         }
 
     }
+}
+
+
+//void
+//rel_read (rel_t *s)
+//{
+//    /*First we need to check if there is still space in sender sliding window buffer*/
+//    int SND_UNA = s->SND_UNA;
+//    int SND_NXT = s->SND_NXT;
+//    int MAXWND = s->MAXWND;
+//    if((SND_NXT - SND_UNA < MAXWND)&& !(s->EOF_ERR_FLAG)) {
+//        //there is still space in the sliding window
+//        //allocate space for a packet
+//        packet_t *packet = (packet_t *) xmalloc(512);
+//        //read from conn_input, it returns the number of bytes
+//        // 0 if there is no data currently available, and -1 on EOF or error.
+//        int read_byte = conn_input(s->c, packet->data, 500);
+//        if (read_byte == -1) {
+//            //we have received an EOF signal. Create an EOF packet and Mark it with the Flag
+//            s->EOF_ERR_FLAG = 1;
+//            //which has "zero length payload", and we should also push this packet in the buffer
+//            //        packet->data = ()0;
+//            packet->len = htons((uint16_t) 12);
+//            packet->ackno = htonl((uint32_t) 0); //EOF packet, ackno doesn't matter
+//            packet->seqno = htonl((uint32_t) SND_NXT);
+//            //moving the upper bound index
+//            s->SND_NXT = s->SND_NXT + 1;
+//
+//            packet->cksum = (uint16_t) 0;
+//            packet->cksum = cksum(packet, 12);
+//
+//            //finished packing the EOF packek, push it into the send buffer
+//            buffer_insert(s->send_buffer, packet, get_current_system_time());
+//            conn_sendpkt(s->c, packet, (size_t) 12);
+//            free(packet);
+//            rel_read(s);
+//            return;
+//        } else if (read_byte == 0) {
+//            free(packet);
+//            return; // the lib will call rel_read again on its own, do not loop calling!
+//        } else {
+//            packet->len = htons((uint16_t)(12 + read_byte));
+//            packet->ackno = htonl((uint32_t) 10); //data packet, ackno doesn't matter
+//            packet->cksum = htons((uint16_t) 0);
+//            packet->seqno = htonl((uint32_t) SND_NXT);
+////            fprintf(stderr, "packing data into pac_seq: %d\n", SND_NXT);
+//
+//            //moving the sliding window
+//            s->SND_NXT = s->SND_NXT + 1;
+//
+//            packet->cksum = (uint16_t) 0;
+//            packet->cksum = cksum(packet, 12 + read_byte);
+//
+//            //finished packing the data packet, push it into the send buffer
+//            buffer_insert(s->send_buffer, packet, get_current_system_time());
+////            fprintf(stderr, "sender buffer size : %d ,  receiver buffer size : %d\n",
+////                    buffer_size(s->send_buffer),  buffer_size(s->rec_buffer));
+//            conn_sendpkt(s->c, packet, (size_t) 12 + read_byte);
+//            free(packet);
+//            rel_read(s);
+//        }
+//
+//    }
+//    return NULL;
+//}
+
+
+
+
+
+void
+rel_read (rel_t *s)
+{
+    /*First we need to check if there is still space in sender sliding window buffer*/
+    int SND_UNA;
+    int SND_NXT;
+    int MAXWND;
+    int read_byte;
+    SND_UNA = s->SND_UNA;
+    SND_NXT = s->SND_NXT;
+    MAXWND = s->MAXWND;
+    packet_t *packet = (packet_t *) xmalloc(512);
+
+    while((SND_NXT - SND_UNA < MAXWND)&& (!(s->EOF_ERR_FLAG))) {
+
+
+        read_byte = conn_input(s->c, packet->data, 500);
+//        fprintf(stderr, "LOOOPING!!!!! \n");
+        //there is still space in the sliding window
+        //allocate space for a packet
+        if (read_byte == -1) {
+            //we have received an EOF signal. Create an EOF packet and Mark it with the Flag
+            s->EOF_ERR_FLAG = 1;
+            //which has "zero length payload", and we should also push this packet in the buffer
+            //        packet->data = ()0;
+            packet->len = htons((uint16_t) 12);
+            packet->ackno = htonl((uint32_t) 0); //EOF packet, ackno doesn't matter
+            packet->seqno = htonl((uint32_t) SND_NXT);
+            //moving the upper bound index
+            s->SND_NXT = s->SND_NXT + 1;
+
+            packet->cksum = (uint16_t) 0;
+            packet->cksum = cksum(packet, 12);
+
+            //finished packing the EOF packek, push it into the send buffer
+            buffer_insert(s->send_buffer, packet, get_current_system_time());
+            conn_sendpkt(s->c, packet, (size_t) 12);
+            free(packet);
+
+        } else if (read_byte == 0) {
+            free(packet);
+            break;
+// the lib will call rel_read again on its own, do not loop calling!
+        } else {
+            packet->len = htons((uint16_t)(12 + read_byte));
+            packet->ackno = htonl((uint32_t) 10); //data packet, ackno doesn't matter
+            packet->cksum = htons((uint16_t) 0);
+            packet->seqno = htonl((uint32_t) SND_NXT);
+//            fprintf(stderr, "packing data into pac_seq: %d\n", SND_NXT);
+
+            //moving the sliding window
+            s->SND_NXT = s->SND_NXT + 1;
+
+            packet->cksum = (uint16_t) 0;
+            packet->cksum = cksum(packet, 12 + read_byte);
+
+            //finished packing the data packet, push it into the send buffer
+            buffer_insert(s->send_buffer, packet, get_current_system_time());
+//            fprintf(stderr, "sender buffer size : %d ,  receiver buffer size : %d\n",
+//                    buffer_size(s->send_buffer),  buffer_size(s->rec_buffer));
+            conn_sendpkt(s->c, packet, (size_t) 12 + read_byte);
+            free(packet);
+        }
+        packet = (packet_t *) xmalloc(512);
+        SND_UNA = s->SND_UNA;
+        SND_NXT = s->SND_NXT;
+        MAXWND = s->MAXWND;
+
+    }
+//    return NULL;
 }
 
 void
