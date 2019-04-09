@@ -74,7 +74,7 @@ def main(window_size, reliable_filename, reliable_no_answer_filename):
             print("Window test outcome: failure")
 
     # Remove temporary log file
-    os.remove("no_answer_log.tmp")
+#     os.remove("no_answer_log.tmp")
 
 
 if __name__ == "__main__":
