@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="BookmarkManager">
-    <bookmark url="file://$PROJECT_DIR$/computerNetwork/reliable.c" line="243" mnemonic="9" />
-    <bookmark url="file://$PROJECT_DIR$/computerNetwork/reliable.c" line="351" />
+    <bookmark url="file://$PROJECT_DIR$/computerNetwork/reliable.c" line="245" mnemonic="9" />
+    <bookmark url="file://$PROJECT_DIR$/computerNetwork/reliable.c" line="363" />
   </component>
   <component name="CMakeRunConfigurationManager" shouldGenerate="true" shouldDeleteObsolete="true">
     <generated />
@@ -13,8 +13,10 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="501bb6f9-9976-40a0-bb6d-f56beb995b1a" name="Default Changelist" comment="debugging">
+    <list default="true" id="501bb6f9-9976-40a0-bb6d-f56beb995b1a" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/computerNetwork/safe_versions/reliable_save_Tue_12:04.c" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/computerNetwork/cplayground/test.c" beforeDir="false" afterPath="$PROJECT_DIR$/computerNetwork/cplayground/test.c" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/computerNetwork/reliable.c" beforeDir="false" afterPath="$PROJECT_DIR$/computerNetwork/reliable.c" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -42,8 +44,47 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/computerNetwork/reliable.c">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="436">
-              <caret line="103" column="4" selection-start-line="103" selection-start-column="4" selection-end-line="103" selection-end-column="4" />
+            <state relative-caret-position="623">
+              <caret line="260" column="18" selection-start-line="260" selection-start-column="18" selection-end-line="260" selection-end-column="18" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/computerNetwork/cplayground/test.c">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="558">
+              <caret line="31" column="41" selection-start-line="31" selection-start-column="41" selection-end-line="31" selection-end-column="41" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/computerNetwork/rlib.h">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-567">
+              <caret line="244" column="15" selection-start-line="244" selection-start-column="7" selection-end-line="244" selection-end-column="15" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/computerNetwork/safe_versions/reliable_save_Tue_12:04.c">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="425">
+              <caret line="315" column="35" selection-start-line="315" selection-start-column="35" selection-end-line="315" selection-end-column="35" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/computerNetwork/window_test.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="432">
+              <caret line="24" column="15" lean-forward="true" selection-start-line="24" selection-start-column="15" selection-end-line="24" selection-end-column="15" />
+              <folding>
+                <element signature="e#0#17#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -51,8 +92,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/project1_don't look!/reliable.c">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="288">
-              <caret line="55" column="26" selection-start-line="55" selection-start-column="13" selection-end-line="55" selection-end-column="26" />
+            <state relative-caret-position="243">
+              <caret line="160" column="37" selection-start-line="160" selection-start-column="12" selection-end-line="160" selection-end-column="37" />
             </state>
           </provider>
         </entry>
@@ -61,15 +102,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>RCV_NXT</find>
-      <find>MAX</find>
-      <find>timeout</find>
-      <find>time</find>
-      <find>ack</find>
-      <find>packet_seqno</find>
-      <find>removed</find>
-      <find>rel_timer</find>
-      <find>makePacFromInput</find>
       <find>DATA_MAX_LENGTH</find>
       <find>remove</find>
       <find>current</find>
@@ -91,6 +123,15 @@
       <find>r-&gt;window</find>
       <find>r-&gt;current_seqno = 0</find>
       <find>current_seqno</find>
+      <find>eof</find>
+      <find>corrupted</find>
+      <find>conn_buf</find>
+      <find>eof_err_flag</find>
+      <find>sender_window_sliding_ack</find>
+      <find>EOF_ERR_FLAG</find>
+      <find>timer</find>
+      <find>ENV_ACK</find>
+      <find>conn_bufspace</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -101,17 +142,19 @@
       <list>
         <option value="$PROJECT_DIR$/computerNetwork/useTester" />
         <option value="$PROJECT_DIR$/computerNetwork/rlib.h" />
-        <option value="$PROJECT_DIR$/computerNetwork/cplayground/test.c" />
         <option value="$PROJECT_DIR$/computerNetwork/6000" />
         <option value="$PROJECT_DIR$/computerNetwork/12000" />
         <option value="$PROJECT_DIR$/computerNetwork/testSimple" />
         <option value="$PROJECT_DIR$/computerNetwork/4200" />
+        <option value="$PROJECT_DIR$/computerNetwork/reliable_save_Tue_12:04.c" />
+        <option value="$PROJECT_DIR$/computerNetwork/cplayground/test.c" />
         <option value="$PROJECT_DIR$/computerNetwork/reliable.c" />
       </list>
     </option>
   </component>
   <component name="OCFindUsagesOptions" text="true" ivars="false" properties="true" derivedClasses="false" />
   <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="1920" />
     <option name="width" value="1920" />
     <option name="height" value="1080" />
   </component>
@@ -159,6 +202,9 @@
     <property name="settings.editor.selected.configurable" value="vcs.Git" />
   </component>
   <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/computerNetwork/safe_versions" />
+    </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/computerNetwork" />
       <recent name="$PROJECT_DIR$/computerNetwork/cplayground" />
@@ -193,7 +239,7 @@
       <workItem from="1554638788794" duration="11358000" />
       <workItem from="1554666744091" duration="40220000" />
       <workItem from="1554794893092" duration="350000" />
-      <workItem from="1554795912287" duration="1680000" />
+      <workItem from="1554795912287" duration="22107000" />
     </task>
     <task id="LOCAL-00001" summary="set up repo">
       <created>1554208432968</created>
@@ -314,17 +360,24 @@
       <option name="project" value="LOCAL" />
       <updated>1554758229064</updated>
     </task>
-    <option name="localTasksCounter" value="18" />
+    <task id="LOCAL-00018" summary="debugging">
+      <created>1554797682661</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1554797682661</updated>
+    </task>
+    <option name="localTasksCounter" value="19" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="74922000" />
+    <option name="totallyTimeSpent" value="95349000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="0" width="1920" height="1080" extended-state="6" />
+    <frame x="1920" y="0" width="1920" height="1080" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.20194384" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.16198704" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -341,7 +394,7 @@
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="right" id="Database" order="3" weight="0.32991362" />
-      <window_info active="true" anchor="right" id="Terminal" order="4" visible="true" weight="0.32937366" />
+      <window_info active="true" anchor="right" x="0" y="0" width="1920" height="1080" id="Terminal" order="4" type="FLOATING" visible="true" weight="0.45680344" />
     </layout>
     <layout-to-restore>
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.19546436" />
@@ -390,15 +443,6 @@
         <state relative-caret-position="-648" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/computerNetwork/window_test.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <folding>
-            <element signature="e#0#17#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/README.md">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
@@ -434,13 +478,6 @@
     <entry file="file://$PROJECT_DIR$/computerNetwork/cplayground/buffer.h">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/computerNetwork/cplayground/test.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="342">
-          <caret line="19" column="14" selection-start-line="19" selection-start-column="14" selection-end-line="19" selection-end-column="14" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/computerNetwork/rlib.c">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="191">
@@ -459,13 +496,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1337">
           <caret line="266" column="20" selection-start-line="266" selection-start-column="20" selection-end-line="266" selection-end-column="39" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/computerNetwork/rlib.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2546">
-          <caret line="203" column="9" selection-start-line="203" selection-start-column="9" selection-end-line="203" selection-end-column="9" />
         </state>
       </provider>
     </entry>
@@ -528,17 +558,51 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/project1_don't look!/tester">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/computerNetwork/rlib.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-567">
+          <caret line="244" column="15" selection-start-line="244" selection-start-column="7" selection-end-line="244" selection-end-column="15" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/project1_don't look!/reliable.c">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="288">
-          <caret line="55" column="26" selection-start-line="55" selection-start-column="13" selection-end-line="55" selection-end-column="26" />
+        <state relative-caret-position="243">
+          <caret line="160" column="37" selection-start-line="160" selection-start-column="12" selection-end-line="160" selection-end-column="37" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/computerNetwork/safe_versions/reliable_save_Tue_12:04.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="425">
+          <caret line="315" column="35" selection-start-line="315" selection-start-column="35" selection-end-line="315" selection-end-column="35" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/computerNetwork/cplayground/test.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="558">
+          <caret line="31" column="41" selection-start-line="31" selection-start-column="41" selection-end-line="31" selection-end-column="41" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/computerNetwork/window_test.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="432">
+          <caret line="24" column="15" lean-forward="true" selection-start-line="24" selection-start-column="15" selection-end-line="24" selection-end-column="15" />
+          <folding>
+            <element signature="e#0#17#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/computerNetwork/reliable.c">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="436">
-          <caret line="103" column="4" selection-start-line="103" selection-start-column="4" selection-end-line="103" selection-end-column="4" />
+        <state relative-caret-position="623">
+          <caret line="260" column="18" selection-start-line="260" selection-start-column="18" selection-end-line="260" selection-end-column="18" />
         </state>
       </provider>
     </entry>
