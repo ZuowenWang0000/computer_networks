@@ -100,7 +100,8 @@ const struct config_common *cc)
     r->rec_buffer = xmalloc(sizeof(buffer_t));
     r->rec_buffer->head = NULL;
     //set SND.UNA, SND.NXT, RCV.NXT = 0
-    r->SND_UNA = r->SND_NXT = r->RCV_NXT = 0;
+    r->SND_UNA = 0;
+    r->SND_NXT = r->RCV_NXT = 1;
     //read max window size from the configuration parameters via the command
     r->MAXWND = cc->window;
     //read timeout from the configuration parameters passed via the command
@@ -149,11 +150,11 @@ rel_recvpkt (rel_t *r, packet_t *pkt, size_t n)
     pkt->cksum = (uint16_t) 0;
 
     if((packet_length != (uint16_t) n) || (packet_cksum_old != ntohs(cksum(pkt, (int) packet_length)))){
-//        fprintf(stderr, "packet_length: %d", packet_length);
-//        fprintf(stderr, "expected length: %d", n);
-//        fprintf(stderr, "packet cksum: %d", packet_cksum_old);
-//        fprintf(stderr, "new cksum: %d",ntohs(cksum(pkt, (int) packet_length)));
-//        fprintf(stderr, "\npacket corrupted!\n");
+//        fprintf(stderr, "packet_length: %d  ", packet_length);
+//        fprintf(stderr, "expected length: %d  ", n);
+//        fprintf(stderr, "packet cksum: %d  ", packet_cksum_old);
+//        fprintf(stderr, "new cksum: %d  ",ntohs(cksum(pkt, (int) packet_length)));
+        fprintf(stderr, "\npacket corrupted!\n");
         return;
     }
 
