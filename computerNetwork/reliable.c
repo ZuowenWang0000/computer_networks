@@ -149,9 +149,9 @@ rel_recvpkt (rel_t *r, packet_t *pkt, size_t n)
     uint16_t cksum_old_to_restore = pkt->cksum;
     pkt->cksum = (uint16_t) 0;
 
-//    if((packet_length != (uint16_t) n) || (packet_cksum_old != ntohs(cksum(pkt, (int) packet_length)))){
+    if((packet_length != (uint16_t) n) || (packet_cksum_old != ntohs(cksum(pkt, (int) packet_length)))){
 //    if((packet_length < (uint16_t) n) || (packet_cksum_old != ntohs(cksum(pkt, (int) packet_length)))){
-    if((packet_length > (uint16_t) n) || (packet_cksum_old != ntohs(cksum(pkt, (int) packet_length)))){
+//    if((packet_length > (uint16_t) n) || (packet_cksum_old != ntohs(cksum(pkt, (int) packet_length)))){
 //        fprintf(stderr, "packet_length: %d  ", packet_length);
 //        fprintf(stderr, "expected length: %d  ", n);
 //        fprintf(stderr, "packet cksum: %d  ", packet_cksum_old);
@@ -216,7 +216,7 @@ rel_recvpkt (rel_t *r, packet_t *pkt, size_t n)
             }else{
                 buffer_insert(r->rec_buffer, pkt, get_current_system_time());
 //              OK now we have plug this packet into the buffer
-                if(conn_bufspace(r->c) >= packet_length){
+                if(conn_bufspace(r->c) >= (packet_length - 12)){
                     rel_output(r);
                 }else{
 //                    TODO not sure if this implementation is correct or not, for now if the print buffer does not have enough space
@@ -244,6 +244,69 @@ rel_recvpkt (rel_t *r, packet_t *pkt, size_t n)
 
 }
 
+//void
+//rel_read (rel_t *s)
+//{
+//    /*First we need to check if there is still space in sender sliding window buffer*/
+//    int SND_UNA = s->SND_UNA;
+//    int SND_NXT = s->SND_NXT;
+//    int MAXWND = s->MAXWND;
+//    if((SND_NXT - SND_UNA < MAXWND)&& !(s->EOF_ERR_FLAG)) {
+//        //there is still space in the sliding window
+//        //allocate space for a packet
+//        packet_t *packet = (packet_t *) xmalloc(512);
+//        //read from conn_input, it returns the number of bytes
+//        // 0 if there is no data currently available, and -1 on EOF or error.
+//        int read_byte = conn_input(s->c, packet->data, 500);
+//        if (read_byte == -1) {
+//            //we have received an EOF signal. Create an EOF packet and Mark it with the Flag
+//            s->EOF_ERR_FLAG = 1;
+//            //which has "zero length payload", and we should also push this packet in the buffer
+//            //        packet->data = ()0;
+//            packet->len = htons((uint16_t) 12);
+//            packet->ackno = htonl((uint32_t) 0); //EOF packet, ackno doesn't matter
+//            packet->seqno = htonl((uint32_t) SND_NXT);
+//            //moving the upper bound index
+//            s->SND_NXT = s->SND_NXT + 1;
+//
+//            packet->cksum = (uint16_t) 0;
+//            packet->cksum = cksum(packet, 12);
+//
+//            //finished packing the EOF packek, push it into the send buffer
+//            buffer_insert(s->send_buffer, packet, get_current_system_time());
+//            conn_sendpkt(s->c, packet, (size_t) 12);
+//            free(packet);
+//            rel_read(s);
+//            return;
+//        } else if (read_byte == 0) {
+//            free(packet);
+//            return; // the lib will call rel_read again on its own, do not loop calling!
+//        } else {
+//            packet->len = htons((uint16_t)(12 + read_byte));
+//            packet->ackno = htonl((uint32_t) 10); //data packet, ackno doesn't matter
+//            packet->cksum = htons((uint16_t) 0);
+//            packet->seqno = htonl((uint32_t) SND_NXT);
+////            fprintf(stderr, "packing data into pac_seq: %d\n", SND_NXT);
+//
+//            //moving the sliding window
+//            s->SND_NXT = s->SND_NXT + 1;
+//
+//            packet->cksum = (uint16_t) 0;
+//            packet->cksum = cksum(packet, 12 + read_byte);
+//
+//            //finished packing the data packet, push it into the send buffer
+//            buffer_insert(s->send_buffer, packet, get_current_system_time());
+////            fprintf(stderr, "sender buffer size : %d ,  receiver buffer size : %d\n",
+////                    buffer_size(s->send_buffer),  buffer_size(s->rec_buffer));
+//            conn_sendpkt(s->c, packet, (size_t) 12 + read_byte);
+//            free(packet);
+//            rel_read(s);
+//        }
+//
+//    }
+////    return NULL;
+//}
+
 void
 rel_read (rel_t *s)
 {
@@ -251,13 +314,14 @@ rel_read (rel_t *s)
     int SND_UNA = s->SND_UNA;
     int SND_NXT = s->SND_NXT;
     int MAXWND = s->MAXWND;
-    if((SND_NXT - SND_UNA < MAXWND)&& !(s->EOF_ERR_FLAG)) {
+    int read_byte;
+    packet_t *packet = (packet_t *) xmalloc(512);
+
+    while((SND_NXT - SND_UNA < MAXWND)&& (!(s->EOF_ERR_FLAG))) {
+        read_byte = conn_input(s->c, packet->data, 500);
+//        fprintf(stderr, "LOOOPING!!!!! \n");
         //there is still space in the sliding window
         //allocate space for a packet
-        packet_t *packet = (packet_t *) xmalloc(512);
-        //read from conn_input, it returns the number of bytes
-        // 0 if there is no data currently available, and -1 on EOF or error.
-        int read_byte = conn_input(s->c, packet->data, 500);
         if (read_byte == -1) {
             //we have received an EOF signal. Create an EOF packet and Mark it with the Flag
             s->EOF_ERR_FLAG = 1;
@@ -276,13 +340,14 @@ rel_read (rel_t *s)
             buffer_insert(s->send_buffer, packet, get_current_system_time());
             conn_sendpkt(s->c, packet, (size_t) 12);
             free(packet);
-            return;
+
         } else if (read_byte == 0) {
             free(packet);
-            return; // the lib will call rel_read again on its own, do not loop calling!
+            break;
+// the lib will call rel_read again on its own, do not loop calling!
         } else {
             packet->len = htons((uint16_t)(12 + read_byte));
-            packet->ackno = htonl((uint32_t) 0); //data packet, ackno doesn't matter
+            packet->ackno = htonl((uint32_t) 10); //data packet, ackno doesn't matter
             packet->cksum = htons((uint16_t) 0);
             packet->seqno = htonl((uint32_t) SND_NXT);
 //            fprintf(stderr, "packing data into pac_seq: %d\n", SND_NXT);
@@ -300,6 +365,7 @@ rel_read (rel_t *s)
             conn_sendpkt(s->c, packet, (size_t) 12 + read_byte);
             free(packet);
         }
+        packet = (packet_t *) xmalloc(512);
 
     }
 //    return NULL;
