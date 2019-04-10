@@ -102,7 +102,13 @@ const struct config_common *cc)
     //set SND.UNA, SND.NXT, RCV.NXT = 0
 //TODO  double check SND_UNA should be initialized 0 or 1
     r->SND_UNA = 1;
-    r->SND_NXT = r->RCV_NXT = 1;
+    r->SND_NXT = 1;
+//    r->SND_UNA = 0;
+//    r->SND_NXT = 0;
+
+
+
+    r->RCV_NXT = 1;
     //read max window size from the configuration parameters via the command
     r->MAXWND = cc->window;
     //read timeout from the configuration parameters passed via the command
@@ -129,9 +135,9 @@ rel_destroy (rel_t *r)
     free(r->send_buffer);
     buffer_clear(r->rec_buffer);
     free(r->rec_buffer);
-    r->EOF_ERR_FLAG = 0;
-    r->SND_UNA = 1;
-    r->SND_NXT = r->RCV_NXT = 1;
+//    r->EOF_ERR_FLAG = 0;
+//    r->SND_UNA = 1;
+//    r->SND_NXT = r->RCV_NXT = 1;
     // ...
 
 }
@@ -176,7 +182,15 @@ rel_recvpkt (rel_t *r, packet_t *pkt, size_t n)
 //        fprintf(stderr, "\nremoved acked packets : %d\n", acked_packet_number);
 //        fprintf(stderr, "sender buffer size : %d ,  receiver buffer size : %d\n",
 //                buffer_size(r->send_buffer),  buffer_size(r->rec_buffer));
-        //since sliding window moved now, we can read more data if there is any
+        //since sliding window moved now, we can read more data if there is an
+////        ****************How should I tear down the connection?***********************
+//        if(acked_packet_number > 0 && buffer_size(r->send_buffer) == 0){
+//            if(r->EOF_ERR_FLAG == 1 && buffer_size(r->rec_buffer) == 0){
+//                rel_destroy(r);
+//                return;
+//            }
+//        }
+////        ******************************************************************************
         rel_read(r);
 //        return NULL;
     }else{
@@ -206,7 +220,7 @@ rel_recvpkt (rel_t *r, packet_t *pkt, size_t n)
 //            }
 //****************************************************************************
             if(buffer_size(r->rec_buffer) >= (uint32_t) MAXWND){
-//                definitely no space, don't even need to check the sliding_window
+//                definitely no space, don't even need to check the sliding_window upper bound
                 return;
 //  TODO        double check > or >= ?
             }else if(packet_seqno >= r->RCV_NXT + r->MAXWND){
@@ -229,7 +243,7 @@ rel_recvpkt (rel_t *r, packet_t *pkt, size_t n)
             //packet_seqno < r->RCV_NXT
             //make an ack packet with ackno = seqno + 1 and send it.
             struct ack_packet* ack_pac = xmalloc(sizeof(struct ack_packet));
-            //ack_pac->ackno = htonl((uint32_t) (packet_seqno + 1));
+//            ack_pac->ackno = htonl((uint32_t) (packet_seqno + 1));
             ack_pac->ackno = htonl((uint32_t) (r->RCV_NXT));
             ack_pac->len = htons ((uint16_t) 8);
             ack_pac->cksum = (uint16_t) 0;
@@ -244,6 +258,8 @@ rel_recvpkt (rel_t *r, packet_t *pkt, size_t n)
 
 }
 
+
+////// ****************** The recursive implementation of rel_read *****************
 //void
 //rel_read (rel_t *s) {
 //    /*First we need to check if there is still space in sender sliding window buffer*/
@@ -305,6 +321,9 @@ rel_recvpkt (rel_t *r, packet_t *pkt, size_t n)
 //
 //    }
 //}
+////// *******The recursive implementation of rel_read *****not in use****
+
+
 
 void
 rel_output (rel_t *r)
@@ -315,6 +334,10 @@ rel_output (rel_t *r)
     buffer_node_t* first_node = xmalloc(sizeof(buffer_node_t));
     first_node = buffer_get_first(r->rec_buffer);
 
+    if(first_node == NULL){
+        return;
+    }
+
     packet_t* packet = &(first_node->packet);
     uint16_t packet_length = ntohs(packet->len);
 //  uint16_t packet_cksum = ntohs(packet->cksum);
@@ -324,7 +347,7 @@ rel_output (rel_t *r)
         if(is_EOF(packet)){
             //If we reached the EOF, we tell the conn_output and destroy the connection
 
-            conn_output(r->c, packet->data, 0); //send a signal to output by calling conn_output with len 0
+            conn_output(r->c, packet->data, htons(0)); //send a signal to output by calling conn_output with len 0
             //send an ackno to the sender side
 
             struct ack_packet* ack_pac = xmalloc(sizeof(struct ack_packet));
@@ -343,6 +366,7 @@ rel_output (rel_t *r)
             if(r->EOF_ERR_FLAG == 1 && buffer_size(r->send_buffer) == 0 && buffer_size(r->rec_buffer) == 0){
                 rel_destroy(r);
             }
+//            rel_destroy(r);
 
         }else{
             //flush the normal data to the output
@@ -351,7 +375,8 @@ rel_output (rel_t *r)
     //            fprintf(stderr, "sender buffer size : %d ,  receiver buffer size : %d\n",
     //                    buffer_size(r->send_buffer),  buffer_size(r->rec_buffer));
             struct ack_packet* ack_pac = xmalloc(sizeof(struct ack_packet));
-            ack_pac->ackno = htonl((uint32_t) (packet_seqno + 1));
+//            ack_pac->ackno = htonl((uint32_t) (packet_seqno + 1));
+            ack_pac->ackno = htonl((uint32_t) (r->RCV_NXT+ 1));
             ack_pac->len = htons ((uint16_t) 8);
             ack_pac->cksum = (uint16_t) 0;
             ack_pac->cksum = cksum(ack_pac, (int) 8);
@@ -441,7 +466,7 @@ rel_output (rel_t *r)
 
 
 
-
+////// ****************** The while implementation of rel_read *****************
 void
 rel_read (rel_t *s)
 {
