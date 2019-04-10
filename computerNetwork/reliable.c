@@ -124,7 +124,7 @@ const struct config_common *cc)
 void
 rel_destroy (rel_t *r)
 {
-    fprintf(stderr, "ENTER REL_DESTROY!\n");
+//    fprintf(stderr, "ENTER REL_DESTROY!\n");
     if (r->next) {
         r->next->prev = r->prev;
     }
@@ -172,26 +172,26 @@ rel_recvpkt (rel_t *r, packet_t *pkt, size_t n)
     pkt->cksum = cksum_old_to_restore;
 
 
-    if(packet_length == 8){
-        fprintf(stderr, "****@rec   Ack  ack = %x\n",ntohl(pkt->ackno));
-    }
+//    if(packet_length == 8){
+//        fprintf(stderr, "****@rec   Ack  ack = %x\n",ntohl(pkt->ackno));
+//    }
 //
 
-    else{
-        fprintf(stderr, "****@rec Data ack = %d,  seq = %d,  len = %d, data = ommited\n"
-                , ntohl(pkt->ackno), ntohl(pkt->seqno), ntohs(pkt->len));
-    }
+//    else{
+//        fprintf(stderr, "****@rec Data ack = %x,  seq = %x,  len = %x, data = ommited\n"
+//                , ntohl(pkt->ackno), ntohl(pkt->seqno), ntohs(pkt->len));
+//    }
 
     //distinguish ACK. (EOF. Data)
     if (is_ACK(pkt)){
-        fprintf(stderr, "ACKACKACKACKACK\n\n\n");
+//        fprintf(stderr, "ACKACKACKACKACK\n\n\n");
         //if the received packet is ack, then we remove (ack) all packet with seqno number < ackno in the send buffer
 //        fprintf(stderr,"received ackno: %d\n", ntohl(pkt->ackno));
 //        fprintf(stderr, "sender buffer size : %d ,  receiver buffer size : %d\n",
 //                buffer_size(r->send_buffer),  buffer_size(r->rec_buffer));
 
         int acked_packet_number = buffer_remove(r->send_buffer, ntohl(pkt->ackno));
-        fprintf(stderr, "Sender buffer removed acked packets: %d\n", acked_packet_number);
+//        fprintf(stderr, "Sender buffer removed acked packets: %d in decimal\n", acked_packet_number);
         //set up the sliding window
         //TODO double check this one, not sure should be ackno-1 or ackno
         r->SND_UNA = MAX((int) ntohl(pkt->ackno), r->SND_UNA);
@@ -217,7 +217,7 @@ rel_recvpkt (rel_t *r, packet_t *pkt, size_t n)
 //        Thus we handle them together
 //        If the received data packet(including EOF and Data) were not acked, we push it into the receiver buffer
 //        Otherwise we simply ack again(maybe the ack packet got lost in the network)
-        fprintf(stderr, "$$$$ packet_seqno : %x,   r->RCV_NXT  : %x\n", packet_seqno, r->RCV_NXT);
+//        fprintf(stderr, "$$$$ packet_seqno : %x,   r->RCV_NXT  : %x\n", packet_seqno, r->RCV_NXT);
         if(packet_seqno >= r->RCV_NXT){
 //            we push packet into the receive buffer(if there is space in the window)
 //            since the buffer_insert method will place the packet with the order of pac->seqno.
@@ -281,8 +281,6 @@ rel_recvpkt (rel_t *r, packet_t *pkt, size_t n)
 
         }
     }
-
-
 }
 
 
@@ -373,7 +371,7 @@ rel_output (rel_t *r)
 
         if(is_EOF(packet)){
             //If we reached the EOF, we tell the conn_output and destroy the connection
-            fprintf(stderr, "\nREICEVED   EOFEOFOEFOEFOEFOEFOEFOEFOEOFEOFEOFOEFEOFEOFEOFEOF\n");
+//            fprintf(stderr, "\nREICEVED   EOFEOFOEFOEFOEFOEFOEFOEFOEOFEOFEOFOEFEOFEOFEOFEOF\n");
 
 //            while(conn_bufspace(r->c) == 0){
 //
@@ -393,27 +391,29 @@ rel_output (rel_t *r)
             ack_pac->cksum = (uint16_t) 0;
             ack_pac->cksum = cksum(ack_pac, (int) 8);
             conn_sendpkt(r->c, (packet_t *)ack_pac, (size_t) 8);
-            fprintf(stderr, "@send     ack =        %x\n"
-                    , ntohl(ack_pac->ackno));
+//            fprintf(stderr, "@send     ack =        %x\n"
+//                    , ntohl(ack_pac->ackno));
 
             free(ack_pac);
 
             //destroy the connection
             if(r->EOF_ERR_FLAG == 1 && buffer_size(r->send_buffer) == 0 && buffer_size(r->rec_buffer) == 0){
-                fprintf(stderr, "\nDESTROY DESTROY DESTROY DESTROY DESTROY DESTROY DESTROY DESTROY\n");
+//                fprintf(stderr, "\nDESTROY DESTROY DESTROY DESTROY DESTROY DESTROY DESTROY DESTROY\n");
                 rel_destroy(r);
             }
 //            rel_destroy(r);
 
         }else{
             //flush the normal data to the output
+//            fprintf(stderr, "~~~~~~~~~packet_length: %x\n", packet_length);
             int bytes_flushed = conn_output(r->c, packet->data, (size_t) (packet_length - 12));
-
+//            fprintf(stderr, "~~~~~~~~~BYTES_FLUSHED: %x\n", bytes_flushed);
+//            fprintf(stderr, "@flushed  ack =        %x, seq =       %x, len = %x\n"
+//                    , ntohl(packet->ackno), ntohl(packet->seqno), packet_length );
             buffer_remove_first(r->rec_buffer); //remove either EOF or Data packet whatever
             r->RCV_NXT ++;
 
-            fprintf(stderr, "@flushed  ack =        %x, seq =       %x, data = ommited\n"
-                    , ntohl(packet->ackno), ntohl(packet->seqno));
+
     //            fprintf(stderr, "\nbytes_flushed : %d\n", bytes_flushed);
     //            fprintf(stderr, "sender buffer size : %d ,  receiver buffer size : %d\n",
     //                    buffer_size(r->send_buffer),  buffer_size(r->rec_buffer));
@@ -424,13 +424,13 @@ rel_output (rel_t *r)
                 ack_pac->len = htons ((uint16_t) 8);
                 ack_pac->cksum = (uint16_t) 0;
                 ack_pac->cksum = cksum(ack_pac, (int) 8);
-                fprintf(stderr, "@send     ack =        %x\n"
-                        , ntohl(ack_pac->ackno));
+//                fprintf(stderr, "@send     ack =        %x\n"
+//                        , ntohl(ack_pac->ackno));
                 conn_sendpkt(r->c, (packet_t *)ack_pac, (size_t) 8);
                 free(ack_pac);
             }
 
-
+//woeif
 //            buffer_remove_first(r->rec_buffer); //remove either EOF or Data packet whatever
 //            r->RCV_NXT ++;
 
@@ -575,7 +575,7 @@ rel_read (rel_t *s)
             buffer_insert(s->send_buffer, packet, get_current_system_time());
 //            fprintf(stderr, "sender buffer size : %d ,  receiver buffer size : %d\n",
 //                    buffer_size(s->send_buffer),  buffer_size(s->rec_buffer));
-            conn_sendpkt(s->c, packet, (size_t) 12 + read_byte);
+            conn_sendpkt(s->c, packet, (size_t) (12 + read_byte));
             free(packet);
         }
         packet = (packet_t *) xmalloc(512);
@@ -615,7 +615,7 @@ rel_timer ()
             if((cur_time - last_time) >= timeout){
 //                fprintf(stderr, "retransmitting packet with seqno : %d", ntohs(packet->seqno) );
                 //timeout, resend packets
-                fprintf(stderr, "RETRASNMITTING!  pac_seqno : %x \n", packet->seqno);
+//                fprintf(stderr, "RETRASNMITTING!  pac_seqno : %x \n", packet->seqno);
                 conn_sendpkt(current->c, packet, (size_t)(ntohs(packet->len)));
                 //also update the retransmittion time of this node
                 node->last_retransmit = cur_time;

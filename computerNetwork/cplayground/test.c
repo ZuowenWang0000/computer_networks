@@ -17,19 +17,13 @@
 
 
 int main(){
-    int a,b,c;
 
-    a = b = c = 0;
 
-//    printf("a = b = c = %d", a);
+    int* a = malloc(sizeof(int));
+    *a = 11;
 
-    packet_t *pac;
-    pac = malloc(sizeof(*pac));
-    printf("%d\n", sizeof(pac));
-    printf("%d\n",sizeof(* pac));
-    printf("%d\n",sizeof(packet_t *));
-
-    printf("%d'n", (int) 3 < (uint16_t) 2);
+    printf("%d\n", htons(*a));
+    printf("%d\n", *a);
 
     return 0;
 }
