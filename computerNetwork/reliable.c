@@ -456,8 +456,6 @@ rel_read (rel_t *s)
     packet_t *packet = (packet_t *) xmalloc(512);
 
     while((SND_NXT - SND_UNA < MAXWND)&& (!(s->EOF_ERR_FLAG))) {
-
-
         read_byte = conn_input(s->c, packet->data, 500);
 //        fprintf(stderr, "LOOOPING!!!!! \n");
         //there is still space in the sliding window
