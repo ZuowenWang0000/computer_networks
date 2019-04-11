@@ -580,6 +580,7 @@ rel_read (rel_t *s)
     SND_NXT = s->SND_NXT;
     MAXWND = s->MAXWND;
     packet_t *packet = (packet_t *) xmalloc(512);
+    memset(packet, 0 , sizeof(packet_t));
     if((s->EOF_SENT_FLAG)){
        return;
     }
