@@ -139,9 +139,9 @@ const struct config_common *cc)
 void
 rel_destroy (rel_t *r)
 {
-    fprintf(stderr, "ENTER REL_DESTROY!\n");
-    fsync(2);
-    fsync(1);
+//    fprintf(stderr, "ENTER REL_DESTROY!\n");
+//    fsync(2);
+//    fsync(1);
     if (r->next) {
         r->next->prev = r->prev;
     }
@@ -378,6 +378,7 @@ rel_output (rel_t *r)
     first_node = buffer_get_first(r->rec_buffer);
 
     if(first_node == NULL){
+        free(first_node);
         return;
     }
 
@@ -393,7 +394,7 @@ rel_output (rel_t *r)
 
         if(is_EOF(packet)){
             //If we reached the EOF, we tell the conn_output and destroy the connection
-            fprintf(stderr, "\nRECEIVED   EOFEOFOEFOEFOEFOEFOEFOEFOEOFEOFEOFOEFEOFEOFEOFEOF\n");
+//            fprintf(stderr, "\nRECEIVED   EOFEOFOEFOEFOEFOEFOEFOEFOEOFEOFEOFOEFEOFEOFEOFEOF\n");
 
             conn_output(r->c, packet->data, htons(0)); //send a signal to output by calling conn_output with len 0
             //send an ackno to the sender side
@@ -401,8 +402,6 @@ rel_output (rel_t *r)
             buffer_remove_first(r->rec_buffer); //remove either EOF or Data packet whatever
             r->RCV_NXT ++;
             r->EOF_RECV_FLAG = 1;
-
-
 
             struct ack_packet* ack_pac = xmalloc(sizeof(struct ack_packet));
 //            ack_pac->ackno = htonl((uint32_t) (packet_seqno + 1));
@@ -430,7 +429,7 @@ rel_output (rel_t *r)
             if(r->EOF_ACK_RECV_FLAG && r->EOF_SENT_FLAG &&r->EOF_RECV_FLAG && !r->flush_busy && buffer_size(r->send_buffer) == 0){
 //                fprintf(stderr, "@@@@@@@@@  DESTROYING!!!!!!!!!!!\n\n\n");
 //                fsync(2);fsync(1);
-
+                free(first_node);
                 rel_destroy(r);
                 return;
             }
@@ -444,10 +443,10 @@ rel_output (rel_t *r)
                 r->flush_busy = 1;
                 bytes_flushed = conn_output(r->c, packet->data, (size_t) (packet_length - 12));
 
-                fprintf(stderr, "~~~~~~~~~BYTES_FLUSHED: %x\n", bytes_flushed);
-                fprintf(stderr, "@flushed  ack =        %x, seq =       %x, len = %x\n"
-                        , ntohl(packet->ackno), ntohl(packet->seqno), packet_length );
-                fsync(2);fsync(1);
+//                fprintf(stderr, "~~~~~~~~~BYTES_FLUSHED: %x\n", bytes_flushed);
+//                fprintf(stderr, "@flushed  ack =        %x, seq =       %x, len = %x\n"
+//                        , ntohl(packet->ackno), ntohl(packet->seqno), packet_length );
+//                fsync(2);fsync(1);
 
                 buffer_remove_first(r->rec_buffer); //remove either EOF or Data packet whatever
                 r->RCV_NXT ++;
@@ -480,8 +479,6 @@ rel_output (rel_t *r)
 //                }
 
                 free(ack_pac);
-
-
 //woeif
 //            buffer_remove_first(r->rec_buffer); //remove either EOF or Data packet whatever
 //            r->RCV_NXT ++;
@@ -498,6 +495,8 @@ rel_output (rel_t *r)
         packet_length = ntohs(packet->len);
         packet_seqno = ntohl(packet->seqno);
     }
+
+    free(first_node);
 }
 
 
@@ -579,13 +578,15 @@ rel_read (rel_t *s)
     SND_UNA = s->SND_UNA;
     SND_NXT = s->SND_NXT;
     MAXWND = s->MAXWND;
-    packet_t *packet = (packet_t *) xmalloc(512);
-    memset(packet, 0 , sizeof(packet_t));
+
     if((s->EOF_SENT_FLAG)){
+
        return;
     }
 
     while((SND_NXT - SND_UNA < MAXWND)&& (!(s->EOF_SENT_FLAG))) {
+        packet_t *packet = (packet_t *) xmalloc(512);
+        memset(packet, 0 , sizeof(packet_t));
 //    while((buffer_size(s->send_buffer) < MAXWND)&& (!(s->EOF_SENDER_FLAG))) {
         read_byte = conn_input(s->c, packet->data, 500);
 //        fprintf(r->fptr, "LOOOPING!!!!! \n");
@@ -610,7 +611,7 @@ rel_read (rel_t *s)
             //finished packing the EOF packek, push it into the send buffer
             buffer_insert(s->send_buffer, packet, get_current_system_time());
             conn_sendpkt(s->c, packet, (size_t) 12);
-            free(packet);
+//            free(packet);
 
 
         } else if (read_byte == 0) {
@@ -622,7 +623,7 @@ rel_read (rel_t *s)
             packet->ackno = htonl((uint32_t) 0); //data packet, ackno doesn't matter
             packet->cksum = htons((uint16_t) 0);
             packet->seqno = htonl((uint32_t) SND_NXT);
-            fprintf(stderr, "packing data into pac_seq: %d\n", SND_NXT);
+//            fprintf(stderr, "packing data into pac_seq: %d\n", SND_NXT);
 
             //moving the sliding window
             s->SND_NXT = s->SND_NXT + 1;
@@ -635,9 +636,10 @@ rel_read (rel_t *s)
 //            fprintf(r->fptr, "sender buffer size : %d ,  receiver buffer size : %d\n",
 //                    buffer_size(s->send_buffer),  buffer_size(s->rec_buffer));
             conn_sendpkt(s->c, packet, (size_t) (12 + read_byte));
-            free(packet);
+//            free(packet);
         }
-        packet = (packet_t *) xmalloc(512);
+        free(packet);
+//        packet = (packet_t *) xmalloc(512);
         SND_UNA = s->SND_UNA;
         SND_NXT = s->SND_NXT;
         MAXWND = s->MAXWND;
