@@ -374,11 +374,9 @@ rel_output (rel_t *r)
 
 //  let's flush all in order packets in the receiving buffer into output
 //  until we reached an insuccesive one.
-    buffer_node_t* first_node = xmalloc(sizeof(buffer_node_t));
-    first_node = buffer_get_first(r->rec_buffer);
+    buffer_node_t* first_node = buffer_get_first(r->rec_buffer);
 
     if(first_node == NULL){
-        free(first_node);
         return;
     }
 
@@ -429,7 +427,7 @@ rel_output (rel_t *r)
             if(r->EOF_ACK_RECV_FLAG && r->EOF_SENT_FLAG &&r->EOF_RECV_FLAG && !r->flush_busy && buffer_size(r->send_buffer) == 0){
 //                fprintf(stderr, "@@@@@@@@@  DESTROYING!!!!!!!!!!!\n\n\n");
 //                fsync(2);fsync(1);
-                free(first_node);
+
                 rel_destroy(r);
                 return;
             }
@@ -496,7 +494,6 @@ rel_output (rel_t *r)
         packet_seqno = ntohl(packet->seqno);
     }
 
-    free(first_node);
 }
 
 
