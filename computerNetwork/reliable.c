@@ -1,3 +1,5 @@
+//saturday 1:55
+
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
@@ -203,13 +205,16 @@ rel_recvpkt (rel_t *r, packet_t *pkt, size_t n)
 
 
         int acked_packet_number = buffer_remove(r->send_buffer, (uint32_t) ntohl(pkt->ackno));
+
         fprintf(stderr, "Sender buffer removed acked packets: %x\n", acked_packet_number);
         //set up the sliding window
         //TODO double check this one, not sure should be ackno-1 or ackno
         r->SND_UNA = MAX((int) ntohl(pkt->ackno), r->SND_UNA);
 //        fprintf(r->fptr, "\nremoved acked packets : %d\n", acked_packet_number);
-//        fprintf(r->fptr, "sender buffer size : %d ,  receiver buffer size : %d\n",
-//                buffer_size(r->send_buffer),  buffer_size(r->rec_buffer));
+        fprintf(stderr, "sender buffer size : %d ,  receiver buffer size : %d\n",
+                buffer_size(r->send_buffer),  buffer_size(r->rec_buffer));
+        fsync(1); fsync(2);
+
         //since sliding window moved now, we can read more data if there is an
 ////        ****************How should I tear down the connection?***********************
 //        if(acked_packet_number > 0 && buffer_size(r->send_buffer) == 0){
@@ -236,6 +241,7 @@ rel_recvpkt (rel_t *r, packet_t *pkt, size_t n)
 //        Otherwise we simply ack again(maybe the ack packet got lost in the network)
 //        fprintf(r->fptr, "REL_RECVPKT: coming data/eof packet_seqno : %x,   r->RCV_NXT  : %x\n", packet_seqno, r->RCV_NXT);
         if(packet_seqno >= r->RCV_NXT){
+            fprintf(stderr, "\nHEREHEREHREHEHREHREHREHEHR\n");
 
 //            if(packet_seqno == r->RCV_NXT){
 //                                buffer_insert(r->rec_buffer, pkt, get_current_system_time());
@@ -250,33 +256,39 @@ rel_recvpkt (rel_t *r, packet_t *pkt, size_t n)
 
             int MAXWND = r->MAXWND;
 
-            if(buffer_size(r->rec_buffer) >= (uint32_t) MAXWND){
-//                definitely no space, don't even need to check the sliding_window upper bound
-                return;
-//  TODO        double check > or >= ?
-            }else
+//            if(buffer_size(r->rec_buffer) >= (uint32_t) MAXWND){
+//                fprintf(stderr, "\nHEREHEREHREHEHREHREHREHEHR2222222222222\n");
+////                definitely no space, don't even need to check the sliding_window upper bound
+//                return;
+////  TODO        double check > or >= ?
+//            }else
             if(packet_seqno >= r->RCV_NXT + r->MAXWND){
+                fprintf(stderr, "\nHEREHEREHREHEHREHREHREHEHR33333333333333\n");
 //                if we insert this pac in the buffer, there might be no enough room for the first starting packet(in iterative flush process)
 //                thus we also discard it
                 return;
             }else{
-                buffer_insert(r->rec_buffer, pkt, get_current_system_time());
+                fprintf(stderr, "\nHEREHEREHREHEHREHREHREHEHR4444444444444\n");
 //              OK now we have plug this packet into the buffer
-//                if(conn_bufspace(r->c) >= (packet_length - 12)){
-////                if(conn_bufspace(r->c) != 0){
+                if(conn_bufspace(r->c) >= (packet_length - 12)){
+                    if(!buffer_contains(r->rec_buffer, ntohl(pkt->seqno))) {
+                        buffer_insert(r->rec_buffer, pkt, get_current_system_time());
+                    }
+//                if(conn_bufspace(r->c) != 0){
+                    rel_output(r);
+                }else{
+//                    TODO not sure if this implementation is correct or not, for now if the print buffer does not have enough space
+//                    it will simply return (and wait for the sender side to resend)
 //                    rel_output(r);
-//                }else{
-////                    TODO not sure if this implementation is correct or not, for now if the print buffer does not have enough space
-////                    it will simply return (and wait for the sender side to resend)
-////                    rel_output(r);
-//                    return;
-//                }
+                    return;
+                }
 
-                rel_output(r);
+//                rel_output(r);
 
 
             }
         }else{
+            fprintf(stderr, "\nHEREHEREHREHEHREHREHREHEHR55555555555555\n");
             //packet_seqno < r->RCV_NXT
             //make an ack packet with ackno = seqno + 1 and send it.
             if(packet_seqno != 0){
@@ -302,71 +314,6 @@ rel_recvpkt (rel_t *r, packet_t *pkt, size_t n)
 
 
 
-////// ****************** The recursive implementation of rel_read *****************
-//void
-//rel_read (rel_t *s) {
-//    /*First we need to check if there is still space in sender sliding window buffer*/
-//    int SND_UNA = s->SND_UNA;
-//    int SND_NXT = s->SND_NXT;
-//    int MAXWND = s->MAXWND;
-//    if ((SND_NXT - SND_UNA < MAXWND) && !(s->EOF_ERR_FLAG)) {
-//        //there is still space in the sliding window
-//        //allocate space for a packet
-//        packet_t *packet = (packet_t *) xmalloc(512);
-//        //read from conn_input, it returns the number of bytes
-//        // 0 if there is no data currently available, and -1 on EOF or error.
-//        int read_byte = conn_input(s->c, packet->data, 500);
-//        if (read_byte == -1) {
-//            //we have received an EOF signal. Create an EOF packet and Mark it with the Flag
-//            s->EOF_ERR_FLAG = 1;
-//            //which has "zero length payload", and we should also push this packet in the buffer
-//            //        packet->data = ()0;
-//            packet->len = htons((uint16_t) 12);
-//            packet->ackno = htonl((uint32_t) 0); //EOF packet, ackno doesn't matter
-//            packet->seqno = htonl((uint32_t) SND_NXT);
-//            //moving the upper bound index
-//            s->SND_NXT = s->SND_NXT + 1;
-//
-//            packet->cksum = (uint16_t) 0;
-//            packet->cksum = cksum(packet, 12);
-//
-//            //finished packing the EOF packek, push it into the send buffer
-//            buffer_insert(s->send_buffer, packet, get_current_system_time());
-//            conn_sendpkt(s->c, packet, (size_t) 12);
-//            free(packet);
-//            rel_read(s);
-//            return;
-//        } else if (read_byte == 0) {
-//            free(packet);
-//            return; // the lib will call rel_read again on its own, do not loop calling!
-//        } else {
-//            packet->len = htons((uint16_t)(12 + read_byte));
-//            packet->ackno = htonl((uint32_t) 0); //data packet, ackno doesn't matter
-//            packet->cksum = htons((uint16_t) 0);
-//            packet->seqno = htonl((uint32_t) SND_NXT);
-////            fprintf(r->fptr, "packing data into pac_seq: %d\n", SND_NXT);
-//
-//            //moving the sliding window
-//            s->SND_NXT = s->SND_NXT + 1;
-//
-//            packet->cksum = (uint16_t) 0;
-//            packet->cksum = cksum(packet, 12 + read_byte);
-//
-//            //finished packing the data packet, push it into the send buffer
-//            buffer_insert(s->send_buffer, packet, get_current_system_time());
-////            fprintf(r->fptr, "sender buffer size : %d ,  receiver buffer size : %d\n",
-////                    buffer_size(s->send_buffer),  buffer_size(s->rec_buffer));
-//            conn_sendpkt(s->c, packet, (size_t) 12 + read_byte);
-//            free(packet);
-//            rel_read(s);
-//            return;
-//        }
-//
-//    }
-//}
-////// *******The recursive implementation of rel_read *****not in use****
-
-
 
 void
 rel_output (rel_t *r)
@@ -384,9 +331,16 @@ rel_output (rel_t *r)
     uint16_t packet_length = ntohs(packet->len);
 //  uint16_t packet_cksum = ntohs(packet->cksum);
     uint16_t packet_seqno = ntohl(packet->seqno);
+    fprintf(stderr, "\nCALLED REL_OUTPUT??????????\n");
+    if(first_node!=NULL){
+        fprintf(stderr, "\nNULLLLLLLLNULLLLLLLNULLLL??????????\n");
+    }else if (ntohl(packet->seqno) == (uint32_t) r->RCV_NXT){
+        fprintf(stderr, "\nEQUAL  EQUAL  EUQAL ??????????\n");
+    }
     while((first_node != NULL) &&
           (ntohl(packet->seqno) == (uint32_t) r->RCV_NXT) &&
           (conn_bufspace(r->c) >= (packet_length - 12))){
+        fprintf(stderr, "\nENTER LOOP REL_OUTPUT!!!!!!!!!!!\n");
         packet_length = ntohs(packet->len);
         packet_seqno = ntohl(packet->seqno);
 
@@ -433,7 +387,7 @@ rel_output (rel_t *r)
             }
 
 
-        }else{
+        }else{ //is not EOF!!!!!
             //flush the normal data to the output
 //            fprintf(r->fptr, "~~~~~~~~~packet_length: %x\n", packet_length);
             int bytes_flushed;
@@ -450,19 +404,6 @@ rel_output (rel_t *r)
                 r->RCV_NXT ++;
 
                 r->flush_busy = 0;
-            }else{
-                bytes_flushed = -1;
-//                fprintf(r->fptr, "~~~~~~~~~BYTES_FLUSHED: %x\n", bytes_flushed);
-//                fprintf(r->fptr, "@flushed  ack =        %x, seq =       %x, len = %x\n"
-//                        , ntohl(packet->ackno), ntohl(packet->seqno), packet_length );
-            }
-
-
-
-
-    //            fprintf(r->fptr, "\nbytes_flushed : %d\n", bytes_flushed);
-    //            fprintf(r->fptr, "sender buffer size : %d ,  receiver buffer size : %d\n",
-    //                    buffer_size(r->send_buffer),  buffer_size(r->rec_buffer));
 
                 struct ack_packet* ack_pac = xmalloc(sizeof(struct ack_packet));
 //            ack_pac->ackno = htonl((uint32_t) (packet_seqno + 1));
@@ -470,13 +411,64 @@ rel_output (rel_t *r)
                 ack_pac->len = htons ((uint16_t) 8);
                 ack_pac->cksum = (uint16_t) 0;
                 ack_pac->cksum = cksum(ack_pac, (int) 8);
-//                fprintf(r->fptr, "@@@@@send     ack =        %x\n"
-//                        , ntohl(ack_pac->ackno));
-//                for(int i = 10; i >0; i--){
-                     conn_sendpkt(r->c, (packet_t *)ack_pac, (size_t) 8);
-//                }
+
+                conn_sendpkt(r->c, (packet_t *)ack_pac, (size_t) 8);
+
 
                 free(ack_pac);
+
+            }else{
+//                buffer_remove_first(r->rec_buffer); //remove either EOF or Data packet whatever
+                bytes_flushed = -1;
+//                fprintf(r->fptr, "~~~~~~~~~BYTES_FLUSHED: %x\n", bytes_flushed);
+//                fprintf(r->fptr, "@flushed  ack =        %x, seq =       %x, len = %x\n"
+//                        , ntohl(packet->ackno), ntohl(packet->seqno), packet_length );
+            }
+//
+
+//TODO *****************************SPINING BUFSPACE******************************8
+//            int bytes_flushed;
+//            if(conn_bufspace(r->c) >= (packet_length - 12)){
+////            while(conn_bufspace(r->c) < (packet_length - 12)){
+//////                wait spin
+////            }
+//                r->flush_busy = 1;
+//                bytes_flushed = conn_output(r->c, packet->data, (size_t) (packet_length - 12));
+//
+////                fprintf(stderr, "~~~~~~~~~BYTES_FLUSHED: %x\n", bytes_flushed);
+////                fprintf(stderr, "@flushed  ack =        %x, seq =       %x, len = %x\n"
+////                        , ntohl(packet->ackno), ntohl(packet->seqno), packet_length );
+////                fsync(2);fsync(1);
+//
+//                buffer_remove_first(r->rec_buffer); //remove either EOF or Data packet whatever
+//                r->RCV_NXT ++;
+//
+//                r->flush_busy = 0;
+////            }else{
+////                bytes_flushed = -1;
+//////                fprintf(r->fptr, "~~~~~~~~~BYTES_FLUSHED: %x\n", bytes_flushed);
+//////                fprintf(r->fptr, "@flushed  ack =        %x, seq =       %x, len = %x\n"
+//////                        , ntohl(packet->ackno), ntohl(packet->seqno), packet_length );
+////            }
+//TODO *****************************SPINING BUFSPACE******************************8
+
+    //            fprintf(r->fptr, "\nbytes_flushed : %d\n", bytes_flushed);
+    //            fprintf(r->fptr, "sender buffer size : %d ,  receiver buffer size : %d\n",
+    //                    buffer_size(r->send_buffer),  buffer_size(r->rec_buffer));
+
+//                struct ack_packet* ack_pac = xmalloc(sizeof(struct ack_packet));
+////            ack_pac->ackno = htonl((uint32_t) (packet_seqno + 1));
+//                ack_pac->ackno = htonl((uint32_t) (r->RCV_NXT));
+//                ack_pac->len = htons ((uint16_t) 8);
+//                ack_pac->cksum = (uint16_t) 0;
+//                ack_pac->cksum = cksum(ack_pac, (int) 8);
+////                fprintf(r->fptr, "@@@@@send     ack =        %x\n"
+////                        , ntohl(ack_pac->ackno));
+////                for(int i = 10; i >0; i--){
+//                     conn_sendpkt(r->c, (packet_t *)ack_pac, (size_t) 8);
+////                }
+//
+//                free(ack_pac);
 //woeif
 //            buffer_remove_first(r->rec_buffer); //remove either EOF or Data packet whatever
 //            r->RCV_NXT ++;
@@ -689,6 +681,69 @@ rel_timer ()
 //        free(node);
     }
 }
+////// ****************** The recursive implementation of rel_read *****************
+//void
+//rel_read (rel_t *s) {
+//    /*First we need to check if there is still space in sender sliding window buffer*/
+//    int SND_UNA = s->SND_UNA;
+//    int SND_NXT = s->SND_NXT;
+//    int MAXWND = s->MAXWND;
+//    if ((SND_NXT - SND_UNA < MAXWND) && !(s->EOF_ERR_FLAG)) {
+//        //there is still space in the sliding window
+//        //allocate space for a packet
+//        packet_t *packet = (packet_t *) xmalloc(512);
+//        //read from conn_input, it returns the number of bytes
+//        // 0 if there is no data currently available, and -1 on EOF or error.
+//        int read_byte = conn_input(s->c, packet->data, 500);
+//        if (read_byte == -1) {
+//            //we have received an EOF signal. Create an EOF packet and Mark it with the Flag
+//            s->EOF_ERR_FLAG = 1;
+//            //which has "zero length payload", and we should also push this packet in the buffer
+//            //        packet->data = ()0;
+//            packet->len = htons((uint16_t) 12);
+//            packet->ackno = htonl((uint32_t) 0); //EOF packet, ackno doesn't matter
+//            packet->seqno = htonl((uint32_t) SND_NXT);
+//            //moving the upper bound index
+//            s->SND_NXT = s->SND_NXT + 1;
+//
+//            packet->cksum = (uint16_t) 0;
+//            packet->cksum = cksum(packet, 12);
+//
+//            //finished packing the EOF packek, push it into the send buffer
+//            buffer_insert(s->send_buffer, packet, get_current_system_time());
+//            conn_sendpkt(s->c, packet, (size_t) 12);
+//            free(packet);
+//            rel_read(s);
+//            return;
+//        } else if (read_byte == 0) {
+//            free(packet);
+//            return; // the lib will call rel_read again on its own, do not loop calling!
+//        } else {
+//            packet->len = htons((uint16_t)(12 + read_byte));
+//            packet->ackno = htonl((uint32_t) 0); //data packet, ackno doesn't matter
+//            packet->cksum = htons((uint16_t) 0);
+//            packet->seqno = htonl((uint32_t) SND_NXT);
+////            fprintf(r->fptr, "packing data into pac_seq: %d\n", SND_NXT);
+//
+//            //moving the sliding window
+//            s->SND_NXT = s->SND_NXT + 1;
+//
+//            packet->cksum = (uint16_t) 0;
+//            packet->cksum = cksum(packet, 12 + read_byte);
+//
+//            //finished packing the data packet, push it into the send buffer
+//            buffer_insert(s->send_buffer, packet, get_current_system_time());
+////            fprintf(r->fptr, "sender buffer size : %d ,  receiver buffer size : %d\n",
+////                    buffer_size(s->send_buffer),  buffer_size(s->rec_buffer));
+//            conn_sendpkt(s->c, packet, (size_t) 12 + read_byte);
+//            free(packet);
+//            rel_read(s);
+//            return;
+//        }
+//
+//    }
+//}
+////// *******The recursive implementation of rel_read *****not in use****
 
 long get_current_system_time()
 { // now in milliseconds
