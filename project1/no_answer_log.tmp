@@ -1,0 +1,14 @@
+[listening on UDP port 10000]
+ 7539 recv(512): cksum = 5958, len = 0200, ack = 00000000, seq = 00000001
+ 7539 recv(512): cksum = 5958, len = 0200, ack = 00000000, seq = 00000001
+ 7539 recv(512): cksum = 5858, len = 0200, ack = 00000000, seq = 00000002
+ 7539 recv(512): cksum = 5858, len = 0200, ack = 00000000, seq = 00000002
+ 7539 recv(512): cksum = 5758, len = 0200, ack = 00000000, seq = 00000003
+ 7539 recv(512): cksum = 5758, len = 0200, ack = 00000000, seq = 00000003
+ 7539 recv(512): cksum = 5658, len = 0200, ack = 00000000, seq = 00000004
+ 7539 recv(512): cksum = 5658, len = 0200, ack = 00000000, seq = 00000004
+ 7539 recv(512): cksum = 5558, len = 0200, ack = 00000000, seq = 00000005
+ 7539 recv(512): cksum = 5558, len = 0200, ack = 00000000, seq = 00000005
+ 7539 recv(512): cksum = 5958, len = 0200, ack = 00000000, seq = 00000001
+ 7539 recv(512): cksum = 5958, len = 0200, ack = 00000000, seq = 00000001
+Terminated

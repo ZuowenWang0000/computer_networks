@@ -1,2 +1,0 @@
-to use tester
-LD_LIBRARY_PATH=/usr/lib64 ./tester

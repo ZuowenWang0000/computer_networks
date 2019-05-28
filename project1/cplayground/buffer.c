@@ -133,21 +133,6 @@ void buffer_print(buffer_t *buffer) {
     fprintf(stderr, "\n");
 }
 
-void buffer_print_data(buffer_t *buffer) {
-    buffer_node_t* current = buffer_get_first(buffer);
-    int first = 1;
-    while (current != NULL) {
-        if (first == 0) {
-            fprintf(stderr, " -- ");
-        } else {
-            first = 0;
-        }
-        fprintf(stderr, "%d",current->packet.data[0]);
-        current = current->next;
-    }
-    fprintf(stderr, "\n");
-}
-
 /**
  * Retrieve buffer size.
  *
