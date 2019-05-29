@@ -144,9 +144,30 @@ void dr_interface_changed(unsigned intf, int state_changed, int cost_changed) {
 /* ****** It is recommended that you only modify code below this line! ****** */
 //TODO TODO TODO TODO TODO TODO
 //
-long last_updated_time
-route_t* forward_table_first
-route_t* neighbors_first
+long last_updated_time;
+static route_t* forward_table_first;
+// static route_t* neighbors_first;
+
+/*************************DEFINE NEW HELPING FUNCTIONS******************************/
+/*
+/*
+/**/
+
+void advertise_to_neighbors(int num_interfaces);
+
+
+
+
+
+
+
+/*
+/*
+/*
+/************************DEFINE NEW HELPING FUNCTIONS*********************************/
+
+
+
 
 
 /**
@@ -190,24 +211,46 @@ void dr_init(unsigned (*func_dr_interface_count)(),
 
     /* do initialization of your own data structures here */
 //TODO for all interfaces
-//For all interfaces, we maintain an entry for it in the neighbor table and forward table
+//For all interfaces, we maintain an entry for it in the forward table
 //forward table contains all routes including direct and indirect
-//neighbor table is for the convenience of advertising (so we can send the information in the forward table via
-// traverse the neighbor list)
 
-    for (int i = 0; i < dr_interface_count(); i++){
-        lvns_interface_t temp = dr_get_interface(i);
-        valid_interface = (temp.cost < 16) && (temp.enabled);
+
+    for (int i = 0; i < (int)dr_interface_count(); i++){
+        lvns_interface_t curr_if = dr_get_interface(i);
+        int valid_interface = (curr_if.cost < 16) && (curr_if.enabled);
         if(valid_interface){
             //The interface is valid, we first malloc a route
-            route_t* route_temp = malloc(sizeof(route_t);
-            //and initialize it , append it to the direct route linked list
-            route_temp->next = NULL;
+            route_t* route_temp = (route_t*)malloc(sizeof(route_t));
+            //and initialize it
 
+            //WARNING for one hop routes, the destination is the neighbor itself,
+            // I use a 0 to mark the single hop route
+            // this information is important for advertisement
+            // TODO check if we should initialize the ip with the router's own IP
+            route_temp->next_hop_ip = 0; 
+            route_temp->outgoing_intf = i;  //this route is about the i-th interface
 
+            route_temp->is_garbage = 0;
+            route_temp->cost = curr_if.cost;
+            route_temp->subnet = ntohl(curr_if.ip);
+            route_temp->mask = ntohl(curr_if.subnet_mask);
+            
+            struct timeval t;
+            t.tv_sec = 0;
+            t.tv_usec = 0; //dummy initialization, will be filled by gettimeofday
+            route_temp->last_updated = t;
 
+            //push it to the direct route linked list's FIRST place
+            // this can avoid traverse of the entire list
+            route_t* forward_first_old = forward_table_first;
+            route_temp->next = forward_first_old;
+            forward_table_first = route_temp;
         }
     }
+
+    // finished initializing all interfaces corresponding entries
+    // now advertise the update to neighbors.
+
 
 
 
@@ -229,6 +272,12 @@ next_hop_t safe_dr_get_next_hop(uint32_t ip) {
 void safe_dr_handle_packet(uint32_t ip, unsigned intf,
                            char* buf /* borrowed */, unsigned len) {
     /* handle the dynamic routing payload in the buf buffer */
+    rip_header_t* payload_header = buf;
+    uint32_t ip_host = ntohl(ip);
+
+
+
+
 }
 
 void safe_dr_handle_periodic() {
@@ -239,6 +288,9 @@ static void safe_dr_interface_changed(unsigned intf,
                                       int state_changed,
                                       int cost_changed) {
     /* handle an interface going down or being brought up */
+
+
+
 }
 
 /* definition of internal functions */
@@ -285,5 +337,33 @@ void print_routing_table(route_t *head){
         counter ++;
 
         current = current->next;
+    }
+}
+
+
+void advertise_to_neighbors(int num_interfaces){
+    // first we get how many entires are there in the forward table
+    int entry_counter = 0;
+    route_t* entry_temp = forward_table_first;
+    while(entry_temp!=NULL){
+        entry_counter ++;
+        entry_temp = entry_temp->next;
+    }
+
+    for (int i = 0; i < num_interfaces;i++){
+        lvns_interface_t curr_if = dr_get_interface(i);
+        int valid_interface = (curr_if.cost < 16) && (curr_if.enabled);
+        if(valid_interface){
+            // create an update information and send, for this i-th interface
+            // each packet contains: RIP header (size = 4), forward table (entry_counter * sizeof(entry)) 
+            char* payload_header = (char*)malloc(4 + 20*entry_counter);
+
+            // now start making the RIP advertisement packet
+
+
+
+
+        }
+
     }
 }
