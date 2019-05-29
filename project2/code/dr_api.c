@@ -146,7 +146,7 @@ void dr_interface_changed(unsigned intf, int state_changed, int cost_changed) {
 //
 long last_updated_time;
 static route_t* forward_table_first;
-// static route_t* neighbors_first;
+static route_t* neighbors_first;
 
 /*************************DEFINE NEW HELPING FUNCTIONS******************************/
 /*
@@ -154,10 +154,8 @@ static route_t* forward_table_first;
 /**/
 
 void advertise_to_neighbors(int num_interfaces);
-
-
-
-
+route_t* longest_match_prefix_route(route_t* forward_table_starting, uint32_t targetIP, route_t* targetRoute);
+int check_ip_in_list(route_t* list, uint32_t targetIP);
 
 
 
@@ -210,9 +208,13 @@ void dr_init(unsigned (*func_dr_interface_count)(),
     }
 
     /* do initialization of your own data structures here */
-//TODO for all interfaces
-//For all interfaces, we maintain an entry for it in the forward table
-//forward table contains all routes including direct and indirect
+    //TODO for all interfaces
+    //For all interfaces, we maintain an entry for it in the forward table
+    //forward table contains all routes including direct and indirect
+
+    // and for all direct neighbors, we also maintain a separate list,
+    // this saves a lot of time to handle corner cases involving direct link
+    // especially scenarios like indirect route is shorter than a direct link
 
 
     for (int i = 0; i < (int)dr_interface_count(); i++){
@@ -236,7 +238,7 @@ void dr_init(unsigned (*func_dr_interface_count)(),
             route_temp->mask = ntohl(curr_if.subnet_mask);
             
             struct timeval t;
-            t.tv_sec = 0;
+            t.tv_sec = -1; //neighboring link has TTL = -1
             t.tv_usec = 0; //dummy initialization, will be filled by gettimeofday
             route_temp->last_updated = t;
 
@@ -245,17 +247,20 @@ void dr_init(unsigned (*func_dr_interface_count)(),
             route_t* forward_first_old = forward_table_first;
             route_temp->next = forward_first_old;
             forward_table_first = route_temp;
+
+            // since it's neighbors, we keep a copy for neighbor list as well
+            route_t* copy_route = (route_t*) malloc(sizeof(route_t));
+            memcpy(copy_route, route_temp, sizeof(*route_temp));
+            route_t* neighbors_first_old = neighbors_first;
+            copy_route->next = neighbors_first_old;
+            neighbors_first = route_temp;
+
         }
     }
-
+    last_updated_time = get_time();
     // finished initializing all interfaces corresponding entries
     // now advertise the update to neighbors.
-
-
-
-
-
-
+    advertise_to_neighbors((int)dr_interface_count());
 }
 
 next_hop_t safe_dr_get_next_hop(uint32_t ip) {
@@ -343,27 +348,102 @@ void print_routing_table(route_t *head){
 
 void advertise_to_neighbors(int num_interfaces){
     // first we get how many entires are there in the forward table
-    int entry_counter = 0;
-    route_t* entry_temp = forward_table_first;
-    while(entry_temp!=NULL){
-        entry_counter ++;
-        entry_temp = entry_temp->next;
+    int route_entry_counter = 0;
+    route_t* route_entry_temp = forward_table_first;
+    while(route_entry_temp!= NULL){
+        route_entry_counter ++;
+        route_entry_temp = route_entry_temp->next;
     }
-
     for (int i = 0; i < num_interfaces;i++){
         lvns_interface_t curr_if = dr_get_interface(i);
         int valid_interface = (curr_if.cost < 16) && (curr_if.enabled);
         if(valid_interface){
             // create an update information and send, for this i-th interface
             // each packet contains: RIP header (size = 4), forward table (entry_counter * sizeof(entry)) 
-            char* payload_header = (char*)malloc(4 + 20*entry_counter);
-
+            // char* payload_header = (char*)malloc(4 + 20*entry_counter);
+            rip_header_t* payload_header = (rip_header_t*)malloc(4 + 20*route_entry_counter);
             // now start making the RIP advertisement packet
+            //     typedef struct rip_header_t {
+            //     char        command;
+            //     char        version;
+            //     uint16_t    pad;        /* just put zero in this field */
+            //     rip_entry_t entries[0];
+            // } __attribute__ ((packed)) rip_header_t;
+            payload_header->pad = (uint16_t) 0;
+            payload_header->version = RIP_VERSION;
+            // regular update, so response messages
+            payload_header->command = RIP_COMMAND_RESPONSE;
+            // typedef struct rip_entry_t {
+            //     uint16_t addr_family;
+            //     uint16_t pad;           /* just put zero in this field */
+            //     uint32_t ip;
+            //     uint32_t subnet_mask;
+            //     uint32_t next_hop;
+            //     uint32_t metric;
+            // } __attribute__ ((packed)) rip_entry_t;
+            route_t* curr_route_entry = forward_table_first;
+            for(int j = 0; j < route_entry_counter; j++){
+                // initialize entries
+                payload_header->entries[j].addr_family = (uint16_t)RIP_VERSION;
+                payload_header->entries[j].pad = (uint16_t) 0;
+                payload_header->entries[j].ip = ntohl(curr_route_entry->subnet);
+                payload_header->entries[j].subnet_mask = ntohl(curr_route_entry->mask);
+                payload_header->entries[j].next_hop = ntohl(curr_route_entry->next_hop_ip);
+                
+                // handling split horizon with poison reverse
+                route_t* targetRoute = (route_t*)malloc(sizeof(route_t));
 
+                // checking if this route's next hop, is the neighbor I am broadcasting to
+                int in_neighbor_list = check_ip_in_list(neighbors_first, curr_route_entry->next_hop_ip);
+                if((i == curr_route_entry->outgoing_intf) && in_neighbor_list){
+                    payload_header->entries[j].metric = INFINITY;
+                }else{
+                    payload_header->entries[j].metric = (uint32_t) curr_route_entry->cost;
+                }
+                free(targetRoute);
+                // finished initialization
+                curr_route_entry = curr_route_entry->next;
+            }
+            // advertise(send) the payload
+            // i_th interface
+            dr_send_payload(RIP_IP,RIP_IP, i, payload_header, 4 + 20*route_entry_counter);
 
-
-
+            free(payload_header);
         }
-
     }
+}
+
+route_t* longest_match_prefix_route(route_t* forward_list_starting, uint32_t targetIP, route_t* targetRoute){
+    targetRoute = NULL;
+    route_t* route_temp = (route_t*)malloc(sizeof(route_t));
+    route_temp = forward_list_starting;
+    uint32_t longest_mask = 0;
+    while(route_temp!=NULL){
+        // the principle is, when the masked ip equals to masked subnet, 
+        // AND this mask is longer, than any previous mask, we do one update
+        if((targetIP & route_temp->mask) == (route_temp->subnet & route_temp->mask)){
+            if(longest_mask < (uint32_t)(route_temp->mask)){
+                targetRoute = route_temp;
+                longest_mask = (uint32_t)(route_temp->mask);
+            }
+        }
+        route_temp = route_temp->next;
+    }
+    free(route_temp);
+    return targetRoute;
+}
+
+int check_ip_in_list(route_t* list, uint32_t targetIP){
+    route_t* route_temp = (route_t*)malloc(sizeof(route_t));
+    route_temp = list;
+    while(route_temp!=NULL){
+        if((targetIP & route_temp->mask) == (route_temp->subnet & route_temp->mask)){
+            free(route_temp);
+            return 1;
+        }
+        route_temp = route_temp->next;
+    }
+
+    free(route_temp);
+    return 0;
 }
