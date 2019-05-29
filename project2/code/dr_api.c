@@ -142,7 +142,24 @@ void dr_interface_changed(unsigned intf, int state_changed, int cost_changed) {
 
 
 /* ****** It is recommended that you only modify code below this line! ****** */
+//TODO TODO TODO TODO TODO TODO
+//
+long last_updated_time
+route_t* forward_table_first
+route_t* neighbors_first
 
+
+/**
+ * This function will be called before any other method here.  It may only be
+ * called ONCE.  The function pointer passed as an argument tells the DR API how
+ * it can send packets.
+ *     dst_ip         The ultimate desination of the packet.
+ *     next_hop_ip    Next hop IP address (either a router or the ultimate dest)
+ *     outgoing_intf  Index of the interface to send this packet out of
+ *
+ * This method initializes any data structures used internally by this library.
+ * It may also start a thread to take care of periodic tasks.
+ */
 
 void dr_init(unsigned (*func_dr_interface_count)(),
              lvns_interface_t (*func_dr_get_interface)(unsigned index),
@@ -172,6 +189,30 @@ void dr_init(unsigned (*func_dr_interface_count)(),
     }
 
     /* do initialization of your own data structures here */
+//TODO for all interfaces
+//For all interfaces, we maintain an entry for it in the neighbor table and forward table
+//forward table contains all routes including direct and indirect
+//neighbor table is for the convenience of advertising (so we can send the information in the forward table via
+// traverse the neighbor list)
+
+    for (int i = 0; i < dr_interface_count(); i++){
+        lvns_interface_t temp = dr_get_interface(i);
+        valid_interface = (temp.cost < 16) && (temp.enabled);
+        if(valid_interface){
+            //The interface is valid, we first malloc a route
+            route_t* route_temp = malloc(sizeof(route_t);
+            //and initialize it , append it to the direct route linked list
+            route_temp->next = NULL;
+
+
+
+        }
+    }
+
+
+
+
+
 }
 
 next_hop_t safe_dr_get_next_hop(uint32_t ip) {
