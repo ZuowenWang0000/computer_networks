@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/time.h>
+#include <string.h>
 
 #include "dr_api.h"
 #include "rmutex.h"
@@ -149,19 +150,15 @@ static route_t* forward_table_first;
 static route_t* neighbors_first;
 
 /*************************DEFINE NEW HELPING FUNCTIONS******************************/
-/*
-/*
-/**/
+
 
 void advertise_to_neighbors(int num_interfaces);
 route_t* longest_match_prefix_route(route_t* forward_table_starting, uint32_t targetIP, route_t* targetRoute);
 int check_ip_in_list(route_t* list, uint32_t targetIP);
+int validate_packet(rip_header_t* rip_header, uint32_t ip_host, unsigned interface);
 
 
 
-/*
-/*
-/*
 /************************DEFINE NEW HELPING FUNCTIONS*********************************/
 
 
@@ -229,7 +226,7 @@ void dr_init(unsigned (*func_dr_interface_count)(),
             // I use a 0 to mark the single hop route
             // this information is important for advertisement
             // TODO check if we should initialize the ip with the router's own IP
-            route_temp->next_hop_ip = 0; 
+            route_temp->next_hop_ip = 0;   //this should by default be 0, for self destined route
             route_temp->outgoing_intf = i;  //this route is about the i-th interface
 
             route_temp->is_garbage = 0;
@@ -261,6 +258,11 @@ void dr_init(unsigned (*func_dr_interface_count)(),
     // finished initializing all interfaces corresponding entries
     // now advertise the update to neighbors.
     advertise_to_neighbors((int)dr_interface_count());
+
+    printf("*********printing full forward table*********\n");
+    print_routing_table(forward_table_first);
+    printf("*********printing neighbor table*********\n");
+    print_routing_table(neighbors_first);
 }
 
 next_hop_t safe_dr_get_next_hop(uint32_t ip) {
@@ -270,16 +272,170 @@ next_hop_t safe_dr_get_next_hop(uint32_t ip) {
     hop.dst_ip = 0;
 
     /* determine the next hop in order to get to ip */
+    uint32_t ip_host = ntohl(ip);
+    print_ip(ip_host);
+    // we find the most specific matching route using ip.
+    route_t* best_matching_route = (route_t*)malloc(sizeof(route_t));
+    best_matching_route = NULL;
+    longest_match_prefix_route(forward_table_first, ip_host, best_matching_route);
 
+    if(best_matching_route==NULL){
+        hop.dst_ip = htonl((u_int32_t)-1); //return 0xFFFFFFFF if this route does not exist
+        hop.interface = -1; //idk.. doesn't matter?
+    }else{
+        hop.interface = best_matching_route->outgoing_intf;
+        hop.dst_ip = htonl(best_matching_route->next_hop_ip);
+    }
+    free(best_matching_route);
     return hop;
 }
 
+
+/**
+ * COPIED from dr_api.h
+ * Handles the payload of a dynamic routing packet (e.g. a RIP or OSPF payload).
+ *
+ * @param ip   The IP address which the dynamic routing packet is from.
+ *
+ * @param intf The index of the interface on which the packet arrived.
+ *
+ * @param buf  This is the payload of a packet in for the dynamic routing
+ *             protocol.  The caller is reponsible for managing the memory
+ *             associated with buf (e.g. this function will NOT free buf).
+ *
+ * @param len  The number of bytes in the payload.
+ */
 void safe_dr_handle_packet(uint32_t ip, unsigned intf,
                            char* buf /* borrowed */, unsigned len) {
     /* handle the dynamic routing payload in the buf buffer */
-    rip_header_t* payload_header = buf;
+    
     uint32_t ip_host = ntohl(ip);
 
+    // correspond to the 3.9 input processing section in the protocol description
+    if((!validate_packet((rip_header_t*)buf, ip_host, intf))||(((rip_header_t*)buf)->command!=RIP_COMMAND_RESPONSE)){
+        // invalid packet or not reponse message, ignore
+        return;
+    }else{
+        // start handling valid response message
+        rip_header_t* rip_header = (rip_header_t*) buf;
+
+        int entry_counter = 0;
+        route_t* entry_temp = rip_header->entries;
+        while(entry_temp!= NULL){
+        entry_counter ++;
+        entry_temp++;
+        }
+
+
+        for (int i = 0; i < entry_counter; i++){
+            // two checks for each entry, according to the protocol specification
+            // 1. is the destination address valid (eg. unicast, not net 0 or 127)
+            // 2. is the metric valid (i.e. between 1 and 16, inclusive)
+            // if any check fails, ignore that entry and proceed to the next
+            rip_entry_t entry = rip_header->entries[i];
+            // 1. check ip
+            uint32_t ip_host = ntohl(entry.ip);
+            // if (ip_host)
+
+            // 2. check cost
+            uint32_t cost_host = ntohl(entry.metric);
+            if(cost_host>INFINITY || cost_host<1){
+                continue; //go to the next entry
+            }
+
+            // now the entry is valid, we use the entry to update the corresponding cost to the destination
+
+            // first get the cost of routing from thie router to the coming router(in the neighbor list)
+            route_t* traverse_list = neighbors_first;
+            route_t* exact_match_route = NULL;
+            uint32_t cost = -1;
+            while(traverse_list!=NULL){
+                uint32_t mask = traverse_list->mask;
+                if((ip_host & mask)==(traverse_list->subnet & mask)){
+                    // if the subnet ip matches
+                    if(traverse_list->outgoing_intf == (uint32_t)intf){
+                        // if the interface id match
+                        if(traverse_list->next_hop_ip == 0){
+                            // according to readme, directly connected to that subnet
+
+                            cost = traverse_list->cost;
+                        }
+                    }
+                }
+            }
+            if(cost == (uint32_t)-1)  continue;
+
+            if(entry.metric + cost >= INFINITY){
+                entry.metric = INFINITY;
+            }else{
+                entry.metric = entry.metric + cost;
+            }
+
+            traverse_list = forward_table_first;
+            // now we have checked the this comming route entry and it's connectivity with the neighbor list
+            // we start traverse the forward table and try to get the shortest route and combine them
+            // notice that this already included the case that an indirect route to neighbor is actually shorter
+            // but we still have to do case distinction for entry insertion if it is the first time appears
+            while(traverse_list!=NULL){
+                uint32_t mask = traverse_list->mask;
+                if((ip_host & mask)==(traverse_list->subnet & mask)){
+                    // if the masked ip matches
+                    if (mask == entry.subnet_mask){
+                        exact_match_route = traverse_list;
+                        break;
+                    }
+                }
+            }
+
+            struct timeval now;
+            gettimeofday(&now, NULL);
+           
+
+            // general case 1: found a match
+            if(exact_match_route!=NULL)
+            { //need to update the forward table (if shorter route)
+                // protocol page 27 bottom.
+                if(exact_match_route->next_hop_ip == ip_host){
+                    if(exact_match_route->cost != entry.metric){
+                        // this can be due to some change in the sub route, (like break done in some links)
+                        //  so we don't compare the distance
+                        exact_match_route->cost = entry.metric;
+                    }
+                    // reintialize timeout
+                    exact_match_route->last_updated = now;
+                }else{
+                    //the coming entry is not heading towards this router
+                    // then we only update when there is a smaller distance route
+                    if(exact_match_route->cost > entry.metric){
+                        // we only need to update the time, and cost
+                        exact_match_route->last_updated = now;
+                        exact_match_route->cost = entry.metric;
+                    }
+                }
+            }else
+            { // didn't find a exact match route, need to insert in the forward table
+                exact_match_route->subnet = entry.ip;
+                exact_match_route->is_garbage = 0; //don't have to implement
+                exact_match_route->last_updated = now;
+                exact_match_route->mask = entry.subnet_mask;
+                exact_match_route->next_hop_ip = entry.ip;
+                exact_match_route->outgoing_intf = (uint32_t) intf;
+                // simply add, so no need for comparison of cost
+                exact_match_route->cost = entry.metric;
+
+                // now insert into the forward list (!!not into neighbor list)
+                route_t* old_first = forward_table_first;
+                exact_match_route->next = old_first;
+                forward_table_first = exact_match_route;
+            }
+        }
+        // finished updating forward list, advertise it 
+        advertise_to_neighbors((int)dr_interface_count());
+        printf("*********printing full forward table*********\n");
+        print_routing_table(forward_table_first);
+        printf("*********printing neighbor table*********\n");
+        print_routing_table(neighbors_first);
+    }
 
 
 
@@ -395,7 +551,7 @@ void advertise_to_neighbors(int num_interfaces){
 
                 // checking if this route's next hop, is the neighbor I am broadcasting to
                 int in_neighbor_list = check_ip_in_list(neighbors_first, curr_route_entry->next_hop_ip);
-                if((i == curr_route_entry->outgoing_intf) && in_neighbor_list){
+                if((i == (int)curr_route_entry->outgoing_intf) && in_neighbor_list){
                     payload_header->entries[j].metric = INFINITY;
                 }else{
                     payload_header->entries[j].metric = (uint32_t) curr_route_entry->cost;
@@ -406,7 +562,7 @@ void advertise_to_neighbors(int num_interfaces){
             }
             // advertise(send) the payload
             // i_th interface
-            dr_send_payload(RIP_IP,RIP_IP, i, payload_header, 4 + 20*route_entry_counter);
+            dr_send_payload(RIP_IP,RIP_IP, i, (char*)payload_header, 4 + 20*route_entry_counter);
 
             free(payload_header);
         }
@@ -443,7 +599,23 @@ int check_ip_in_list(route_t* list, uint32_t targetIP){
         }
         route_temp = route_temp->next;
     }
-
     free(route_temp);
     return 0;
+}
+// implemented according protocol page 26, section 3.9.2
+int validate_packet(rip_header_t* rip_header, uint32_t ip_host, unsigned interface){
+    //1. The Response must be ignored if it is not from the RIP port
+    // comment: this trivialy hold in our setting
+    //2. The datagram's ipv4 source address should be checked tosee whether the datagram is 
+    // from a valid neighbor
+    if(!check_ip_in_list(neighbors_first, ip_host)){
+        return 0;
+    }
+
+    //3. check if the response is from one of the router's own address
+    //TODO  how?
+
+
+
+    return 1;
 }
