@@ -268,6 +268,9 @@ void dr_init(unsigned (*func_dr_interface_count)(),
 }
 
 next_hop_t safe_dr_get_next_hop(uint32_t ip) {
+    clean_forward_list(forward_table_first);
+
+
     next_hop_t hop;
 
     hop.interface = 0;
@@ -460,7 +463,7 @@ void safe_dr_handle_periodic() {
 //      routing table.  It contains an entry for each destination, with the
 //      distance shown to that destination.
 
-
+    clean_forward_list(forward_table_first);
 
 
 
@@ -472,11 +475,134 @@ void safe_dr_handle_periodic() {
 
 }
 
+/**
+ * COPIED FROM dr_api.h
+ * This method is called when an interface is brought up or down and/or if its
+ * cost is changed.
+ *
+ * @param intf             the index of the interface whose state has changed
+ * @param state_changed    boolean; non-zero if the intf was brought up or down
+ * @param cost_changed     boolean; non-zero if the cost was changed)
+ */
+
 static void safe_dr_interface_changed(unsigned intf,
                                       int state_changed,
                                       int cost_changed) {
     /* handle an interface going down or being brought up */
+// case distinction:
+// 1. interface brought up 
+// 2. interface brought down
+// 3. cost chaged
+// 
+    lvns_interface_t interface = dr_get_interface(intf);
+    uint32_t ip_host = ntohl(interface.ip);
 
+    if(state_changed && dr_get_interface(intf).enabled){
+        // interface is brought up 
+        // we need to 1. add an entry into the forward table.but 
+                            //  if there is a indirect route , to this new router, which is cheaper than this new link
+                            //  then we only add this to neighbor list. otherwise we need to modify both list
+        // first find lookup the interface.ip in this 
+        
+        route_t* existed_route = (route_t*)malloc(sizeof(route_t));
+        route_t* new_route = (route_t*)malloc(sizeof(route_t));
+        new_route->cost = interface.cost;
+        new_route->is_garbage = 0;
+        new_route->mask = ntohl(interface.subnet_mask);
+        new_route->next_hop_ip = 0;
+        new_route->outgoing_intf = (u_int32_t)intf;
+        new_route->subnet = interface.ip;
+
+        struct timeval t;
+        t.tv_sec = -1; //neighboring link has TTL = -1
+        t.tv_usec = 0; //dummy initialization, will be filled by gettimeofday
+        new_route->last_updated = t;
+
+        if(check_ip_in_list_return_route(forward_table_first, ip_host, existed_route)){ //such route exist
+            uint32_t existed_cost=existed_route -> cost; //must be an indirect route. since this is a new interface
+            if(existed_cost < interface.cost){
+                // then only add it into the neighbor list
+                route_t* neighbor_first_old = neighbors_first;
+                new_route->next = neighbor_first_old;
+                neighbors_first = new_route; 
+            }else{
+                //replace the one in forward list, and also add new route to neighbor list
+                // we do this operation by, replacing all information, other than next pointer
+                restore_route_from_neighbor_list(new_route , existed_route);
+                // and push it into the neighbor list 
+                route_t* neighbor_first_old = neighbors_first;
+                new_route->next = neighbor_first_old;
+                neighbors_first = new_route; 
+            }
+        }else{ //such route does not exist, add it to both lists
+                route_t* neighbor_first_old = neighbors_first;
+                new_route->next = neighbor_first_old;
+                neighbors_first = new_route; 
+
+                route_t* copy_new_route = (route_t*)malloc(sizeof(route_t));
+                memcpy(new_route, copy_new_route, sizeof(new_route));
+                route_t* forward_first_old = forward_table_first;
+                copy_new_route->next = forward_first_old;
+                forward_table_first = copy_new_route;
+        }
+
+    }else if (state_changed && !dr_get_interface(intf).enabled){
+        // this interface is brought down.
+        // notice we should delete the corresponding entry in the neighbor list.
+        // and if in the forward list, the route to that router is a direct one, we delete it,
+        // otherwise we keep it.
+
+        // first we handle the direct table
+        route_t* to_delete_route = (route_t*)malloc(sizeof(route_t));
+        if(check_ip_in_list_return_route(neighbors_first, ip_host, to_delete_route)){
+            to_delete_route->cost = INFINITY;
+            clean_forward_list(neighbors_first); //can also use this method to clean neighbor list
+        }else{
+            printf("ERROR\n");
+        }
+
+        // now check in the forward list, delete all entries, which entry->outgoing_intf = intf
+        route_t* curr_route = forward_table_first;
+        while(forward_table_first!=NULL){
+            if(curr_route->outgoing_intf == (uint32_t)intf){
+                curr_route->cost = INFINITY;
+            }
+            curr_route = curr_route->next;
+        }
+
+        // clean the table
+        clean_forward_list(forward_table_first);
+        free(to_delete_route);
+    }else if (cost_changed && dr_get_interface(intf).enabled){
+        // modify all affected routes in both lists
+        // we first handle the neighbor list
+
+        int old_cost_saved = 0;
+        route_t* to_modify_route = (route_t*)malloc(sizeof(route_t));
+        if(check_ip_in_list_return_route(neighbors_first, ip_host, to_modify_route)){   
+            old_cost_saved = to_modify_route->cost;
+            to_modify_route->cost = interface.cost;
+            clean_forward_list(neighbors_first); //can also use this method to clean neighbor list
+        }else{
+            printf("ERROR\n");
+        }
+
+        route_t* curr_route = forward_table_first;
+        while(curr_route!=NULL){
+            if(curr_route->outgoing_intf == intf){
+                curr_route->cost = curr_route->cost - old_cost_saved + interface.cost;
+            }
+            // we also need check if now, the new indirect cost is somehow larger than a direct connection
+            // if so replace it.
+            if(check_ip_in_list_return_route(forward_table_first, ip_host, to_modify_route)){   
+                if(to_modify_route->cost > interface.cost){
+                    restore_route_from_neighbor_list(to_modify_route, to_modify_route);
+                }   
+            }
+            curr_route = curr_route->next;
+        }
+        free(to_modify_route);
+    }
 
 
 }
@@ -724,5 +850,12 @@ void clean_forward_list(route_t* route_list_first){
 }
 
 void restore_route_from_neighbor_list(route_t* neighbor_list_route, route_t* forward_list_route){
-    
+    forward_list_route->cost = neighbor_list_route->cost;
+    forward_list_route->is_garbage = neighbor_list_route->is_garbage;
+    forward_list_route->last_updated = neighbor_list_route->last_updated;
+    forward_list_route->mask = neighbor_list_route->mask;
+    // forward_list_route->next
+    forward_list_route->next_hop_ip = neighbor_list_route->next_hop_ip;
+    forward_list_route->outgoing_intf = neighbor_list_route->outgoing_intf;
+    forward_list_route->subnet = neighbor_list_route->subnet;
 }
