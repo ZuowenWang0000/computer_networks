@@ -12,6 +12,12 @@
 
 #include "dr_api.h"
 #include "rmutex.h"
+#include <inttypes.h>
+
+
+// debugging tools
+#define DEBUG 1
+#define LOOPDEBUG 0
 
 /* internal data structures */
 #define INFINITY 16
@@ -269,16 +275,13 @@ void dr_init(unsigned (*func_dr_interface_count)(),
 
 next_hop_t safe_dr_get_next_hop(uint32_t ip) {
     clean_forward_list(forward_table_first);
-
-
     next_hop_t hop;
-
     hop.interface = 0;
     hop.dst_ip = 0;
-
     /* determine the next hop in order to get to ip */
     uint32_t ip_host = ntohl(ip);
-    print_ip(ip_host);
+    if(DEBUG)  printf("in safe_dr_get_next_hop: \n");
+    if(DEBUG)  print_ip(ip_host);
     // we find the most specific matching route using ip.
     route_t* best_matching_route = (route_t*)malloc(sizeof(route_t));
     best_matching_route = NULL;
@@ -313,7 +316,8 @@ next_hop_t safe_dr_get_next_hop(uint32_t ip) {
 void safe_dr_handle_packet(uint32_t ip, unsigned intf,
                            char* buf /* borrowed */, unsigned len) {
     /* handle the dynamic routing payload in the buf buffer */
-    
+    if(LOOPDEBUG) printf("enterting handle packet method!\n");
+   
     uint32_t ip_host = ntohl(ip);
 
     // correspond to the 3.9 input processing section in the protocol description
@@ -325,12 +329,13 @@ void safe_dr_handle_packet(uint32_t ip, unsigned intf,
         // start handling valid response message
         rip_header_t* rip_header = (rip_header_t*) buf;
 
-        int entry_counter = 0;
-        rip_entry_t* entry_temp = rip_header->entries;
-        while(entry_temp!= NULL){
-        entry_counter ++;
-        entry_temp++;
-        }
+        int entry_counter = ((int)len - 4)/20;
+        // rip_entry_t* entry_temp = rip_header->entries;
+
+        // while(entry_temp!= NULL){
+        //     entry_counter ++;
+        //     entry_temp++;
+        // }
         for (int i = 0; i < entry_counter; i++){
             // two checks for each entry, according to the protocol specification
             // 1. is the destination address valid (eg. unicast, not net 0 or 127)
@@ -437,17 +442,19 @@ void safe_dr_handle_packet(uint32_t ip, unsigned intf,
                 update_flag = 1;
             }
         }
+
+
         // finished updating forward list, advertise it 
         // we only advertise when necessary, as the protocal states this can avoid bouncy routes
         if(update_flag) advertise_to_neighbors((int)dr_interface_count());
-        printf("*********printing full forward table*********\n");
-        print_routing_table(forward_table_first);
-        printf("*********printing neighbor table*********\n");
-        print_routing_table(neighbors_first);
+        if(LOOPDEBUG) printf("*********printing full forward table*********\n");
+        if(LOOPDEBUG) print_routing_table(forward_table_first);
+        if(LOOPDEBUG) printf("*********printing neighbor table*********\n");
+        if(LOOPDEBUG) print_routing_table(neighbors_first);
     }
 
 
-
+        if(LOOPDEBUG) printf("exiting handle packet method!\n");
 }
 
 
@@ -462,6 +469,7 @@ void safe_dr_handle_periodic() {
 //      is a set of messages that contain all of the information from the
 //      routing table.  It contains an entry for each destination, with the
 //      distance shown to that destination.
+    if(LOOPDEBUG) printf("enterting periodic method!\n"); 
 
     clean_forward_list(forward_table_first);
 
@@ -472,7 +480,7 @@ void safe_dr_handle_periodic() {
         last_updated_time = get_time();
         advertise_to_neighbors((int)dr_interface_count());
     }
-
+        if(LOOPDEBUG)  printf("exiting periodic method!\n");
 }
 
 /**
@@ -494,6 +502,7 @@ static void safe_dr_interface_changed(unsigned intf,
 // 2. interface brought down
 // 3. cost chaged
 // 
+    if(DEBUG) printf("enterting interface changed method!\n");
     lvns_interface_t interface = dr_get_interface(intf);
     uint32_t ip_host = ntohl(interface.ip);
 
@@ -540,7 +549,7 @@ static void safe_dr_interface_changed(unsigned intf,
                 neighbors_first = new_route; 
 
                 route_t* copy_new_route = (route_t*)malloc(sizeof(route_t));
-                memcpy(new_route, copy_new_route, sizeof(new_route));
+                memcpy(new_route, copy_new_route, sizeof(*new_route));
                 route_t* forward_first_old = forward_table_first;
                 copy_new_route->next = forward_first_old;
                 forward_table_first = copy_new_route;
@@ -594,17 +603,29 @@ static void safe_dr_interface_changed(unsigned intf,
             }
             // we also need check if now, the new indirect cost is somehow larger than a direct connection
             // if so replace it.
-            if(check_ip_in_list_return_route(forward_table_first, ip_host, to_modify_route)){   
-                if(to_modify_route->cost > interface.cost){
-                    restore_route_from_neighbor_list(to_modify_route, to_modify_route);
-                }   
-            }
+
             curr_route = curr_route->next;
         }
+        if(check_ip_in_list_return_route(forward_table_first, ip_host, to_modify_route)){   
+            if(to_modify_route->cost > interface.cost){
+                restore_route_from_neighbor_list(to_modify_route, to_modify_route);
+            }   
+        }
+
         free(to_modify_route);
     }
 
+    advertise_to_neighbors((int)dr_interface_count());
 
+        if(DEBUG){
+            printf("*********printing full forward table*********\n");
+            print_routing_table(forward_table_first);
+            printf("*********printing neighbor table*********\n");
+            print_routing_table(neighbors_first);
+        }
+
+
+        if(DEBUG) printf("exiting interface changed method!\n");
 }
 
 /* definition of internal functions */
@@ -632,7 +653,7 @@ void print_ip(int ip)
 
 // prints the full routing table
 void print_routing_table(route_t *head){
-    printf("==================================================================\nROUTING TABLE:\n==================================================================\n");
+    // printf("==================================================================\nROUTING TABLE:\n==================================================================\n");
     int counter = 0;
     route_t *current = head;
     while (current != NULL){
@@ -647,7 +668,7 @@ void print_routing_table(route_t *head){
         print_ip(current->outgoing_intf);
         printf("\tCost: %d\n", current->cost);
         printf("\tLast updated (timestamp in microseconds): %li \n", current->last_updated.tv_usec);
-        printf("==============================\n");
+        // printf("==============================\n");
         counter ++;
 
         current = current->next;
@@ -734,6 +755,8 @@ route_t* longest_match_prefix_route(route_t* forward_list_starting, uint32_t tar
             if(longest_mask < (uint32_t)(route_temp->mask)){
                 targetRoute = route_temp;
                 longest_mask = (uint32_t)(route_temp->mask);
+                printf("best mask found so far: \n");
+                print_ip(longest_mask);
             }
         }
         route_temp = route_temp->next;
