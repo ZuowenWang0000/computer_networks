@@ -165,6 +165,7 @@ int validate_packet(rip_header_t* rip_header, uint32_t ip_host, unsigned interfa
 void clean_forward_list(route_t* route_list);
 int check_ip_in_list_return_route(route_t* list, uint32_t targetIP, route_t* targetRoute);
 void restore_route_from_neighbor_list(route_t* neighbor_list_route, route_t* forward_list_route);
+void clean_neighbor_list(route_t* neighbors_first);
 
 
 /************************DEFINE NEW HELPING FUNCTIONS*********************************/
@@ -283,18 +284,20 @@ next_hop_t safe_dr_get_next_hop(uint32_t ip) {
     if(DEBUG)  printf("in safe_dr_get_next_hop: \n");
     if(DEBUG)  print_ip(ip_host);
     // we find the most specific matching route using ip.
-    route_t* best_matching_route = (route_t*)malloc(sizeof(route_t));
+    route_t* best_matching_route;
     best_matching_route = NULL;
-    longest_match_prefix_route(forward_table_first, ip_host, best_matching_route);
+    best_matching_route = longest_match_prefix_route(forward_table_first, ip_host, best_matching_route);
 
     if(best_matching_route==NULL){
+        printf("best matching == NULL\n");
         hop.dst_ip = htonl((u_int32_t)-1); //return 0xFFFFFFFF if this route does not exist
-        hop.interface = -1; //idk.. doesn't matter?
+        hop.interface = 0; //idk.. doesn't matter?
     }else{
+        printf("best matching != NULL\n");
         hop.interface = best_matching_route->outgoing_intf;
         hop.dst_ip = htonl(best_matching_route->next_hop_ip);
     }
-    free(best_matching_route);
+    // free(best_matching_route);
     return hop;
 }
 
@@ -323,19 +326,16 @@ void safe_dr_handle_packet(uint32_t ip, unsigned intf,
     // correspond to the 3.9 input processing section in the protocol description
     if((!validate_packet((rip_header_t*)buf, ip_host, intf))||(((rip_header_t*)buf)->command!=RIP_COMMAND_RESPONSE)){
         // invalid packet or not reponse message, ignore
+
         return;
     }else{
         int update_flag = 0;
         // start handling valid response message
+
         rip_header_t* rip_header = (rip_header_t*) buf;
 
         int entry_counter = ((int)len - 4)/20;
-        // rip_entry_t* entry_temp = rip_header->entries;
 
-        // while(entry_temp!= NULL){
-        //     entry_counter ++;
-        //     entry_temp++;
-        // }
         for (int i = 0; i < entry_counter; i++){
             // two checks for each entry, according to the protocol specification
             // 1. is the destination address valid (eg. unicast, not net 0 or 127)
@@ -366,7 +366,6 @@ void safe_dr_handle_packet(uint32_t ip, unsigned intf,
                         // if the interface id match
                         if(traverse_list->next_hop_ip == 0){
                             // according to readme, directly connected to that subnet
-
                             cost = traverse_list->cost;
                         }
                     }
@@ -385,6 +384,7 @@ void safe_dr_handle_packet(uint32_t ip, unsigned intf,
             // we start traverse the forward table and try to get the shortest route and combine them
             // notice that this already included the case that an indirect route to neighbor is actually shorter
             // but we still have to do case distinction for entry insertion if it is the first time appears
+
             while(traverse_list!=NULL){
                 uint32_t mask = traverse_list->mask;
                 if((ip_host & mask)==(traverse_list->subnet & mask)){
@@ -401,6 +401,7 @@ void safe_dr_handle_packet(uint32_t ip, unsigned intf,
            
 
             // general case 1: found a match
+
             if(exact_match_route!=NULL)
             { //need to update the forward table (if shorter route)
                 // protocol page 27 bottom.
@@ -470,7 +471,8 @@ void safe_dr_handle_periodic() {
 //      routing table.  It contains an entry for each destination, with the
 //      distance shown to that destination.
     if(LOOPDEBUG) printf("enterting periodic method!\n"); 
-
+    if(LOOPDEBUG) print_routing_table(forward_table_first);
+    clean_neighbor_list(neighbors_first);
     clean_forward_list(forward_table_first);
 
 
@@ -480,6 +482,8 @@ void safe_dr_handle_periodic() {
         last_updated_time = get_time();
         advertise_to_neighbors((int)dr_interface_count());
     }
+
+        print_routing_table(forward_table_first);
         if(LOOPDEBUG)  printf("exiting periodic method!\n");
 }
 
@@ -565,7 +569,7 @@ static void safe_dr_interface_changed(unsigned intf,
         route_t* to_delete_route = (route_t*)malloc(sizeof(route_t));
         if(check_ip_in_list_return_route(neighbors_first, ip_host, to_delete_route)){
             to_delete_route->cost = INFINITY;
-            clean_forward_list(neighbors_first); //can also use this method to clean neighbor list
+            clean_neighbor_list(neighbors_first); //can also use this method to clean neighbor list
         }else{
             printf("ERROR\n");
         }
@@ -584,33 +588,48 @@ static void safe_dr_interface_changed(unsigned intf,
         free(to_delete_route);
     }else if (cost_changed && dr_get_interface(intf).enabled){
         // modify all affected routes in both lists
-        // we first handle the neighbor list
+
+        // we first handle the neighbor list. neighbor list's corresponding entry will be changed anyways.
+        // no matter the actually route is shorter or not
+        if (interface.cost > INFINITY) interface.cost = INFINITY;
 
         int old_cost_saved = 0;
         route_t* to_modify_route = (route_t*)malloc(sizeof(route_t));
         if(check_ip_in_list_return_route(neighbors_first, ip_host, to_modify_route)){   
             old_cost_saved = to_modify_route->cost;
             to_modify_route->cost = interface.cost;
-            clean_forward_list(neighbors_first); //can also use this method to clean neighbor list
+            clean_neighbor_list(neighbors_first); //can also use this method to clean neighbor list
         }else{
             printf("ERROR\n");
         }
 
+        //we then check the forward list.
+        // check all routes going out from this interface, and assign new cost. we know this might not be 
+        // shortest anymore, but the further update will be handled by handle response 
         route_t* curr_route = forward_table_first;
         while(curr_route!=NULL){
             if(curr_route->outgoing_intf == intf){
                 curr_route->cost = curr_route->cost - old_cost_saved + interface.cost;
             }
             // we also need check if now, the new indirect cost is somehow larger than a direct connection
+            // for connecting neighbor!
             // if so replace it.
+            // check neighbor list.
+            route_t *neighbor_indirect_route = (route_t*)malloc(sizeof(route_t));
+            if(check_ip_in_list_return_route(neighbors_first, curr_route->subnet, neighbor_indirect_route)){   
+                if(curr_route->cost > interface.cost){
+                    // bc the neighbor list is already refreshed, so safe to use this function to 
+                    // "restore" from neighbor list
+                    restore_route_from_neighbor_list(neighbor_indirect_route, curr_route);
+                }   
+            }
+
+
 
             curr_route = curr_route->next;
         }
-        if(check_ip_in_list_return_route(forward_table_first, ip_host, to_modify_route)){   
-            if(to_modify_route->cost > interface.cost){
-                restore_route_from_neighbor_list(to_modify_route, to_modify_route);
-            }   
-        }
+
+
 
         free(to_modify_route);
     }
@@ -745,12 +764,16 @@ void advertise_to_neighbors(int num_interfaces){
 
 route_t* longest_match_prefix_route(route_t* forward_list_starting, uint32_t targetIP, route_t* targetRoute){
     targetRoute = NULL;
-    route_t* route_temp = (route_t*)malloc(sizeof(route_t));
+    route_t* route_temp;
+    print_routing_table(forward_list_starting);
+
     route_temp = forward_list_starting;
     uint32_t longest_mask = 0;
     while(route_temp!=NULL){
         // the principle is, when the masked ip equals to masked subnet, 
         // AND this mask is longer, than any previous mask, we do one update
+        print_ip(targetIP);
+        print_ip(route_temp->subnet);
         if((targetIP & route_temp->mask) == (route_temp->subnet & route_temp->mask)){
             if(longest_mask < (uint32_t)(route_temp->mask)){
                 targetRoute = route_temp;
@@ -761,36 +784,36 @@ route_t* longest_match_prefix_route(route_t* forward_list_starting, uint32_t tar
         }
         route_temp = route_temp->next;
     }
-    free(route_temp);
+    // free(route_temp);
     return targetRoute;
 }
 
 // TODO check pointer if corrct?  the free method
 int check_ip_in_list(route_t* list, uint32_t targetIP){
-    route_t* route_temp = (route_t*)malloc(sizeof(route_t));
+    route_t* route_temp;
     route_temp = list;
     while(route_temp!=NULL){
         if((targetIP & route_temp->mask) == (route_temp->subnet & route_temp->mask)){
-            free(route_temp);
+            // free(route_temp);
             return 1;
         }
         route_temp = route_temp->next;
     }
-    free(route_temp);
+    // free(route_temp);
     return 0;
 }
 int check_ip_in_list_return_route(route_t* list, uint32_t targetIP, route_t* targetRoute){
-    route_t* route_temp = (route_t*)malloc(sizeof(route_t));
+    route_t* route_temp;
     route_temp = list;
     while(route_temp!=NULL){
         if((targetIP & route_temp->mask) == (route_temp->subnet & route_temp->mask)){
-            targetRoute = route_temp;
-            free(route_temp);
+            *targetRoute = *route_temp;
+            // free(route_temp);
             return 1;
         }
         route_temp = route_temp->next;
     }
-    free(route_temp);
+    // free(route_temp);
     return 0;
 }
 
@@ -820,13 +843,21 @@ void clean_forward_list(route_t* route_list_first){
     route_t* curr_route = route_list_first;
     route_t* prev_route = NULL;
     while(curr_route!=NULL){
-        
-
+printf("EEEE \n");
         int to_delete_flag = 0;
         long route_last_update = (curr_route->last_updated.tv_usec)+curr_route->last_updated.tv_sec*1000;
         long curr_time = get_time();
         // timeout
-        if(curr_time - route_last_update >= RIP_TIMEOUT_SEC*1000) to_delete_flag = 1;
+        if (DEBUG){
+            printf("CLEAN UP CLEANUP !\n");
+            printf("print forward table\n");
+            print_routing_table(forward_table_first);
+            printf("print neighbor table\n");
+            print_routing_table(neighbors_first);
+            // printf("route_last_update = %ld \n", route_last_update);
+        }
+        //timeout
+        if(curr_time - route_last_update >= RIP_TIMEOUT_SEC*1000 && route_last_update!=1000) to_delete_flag = 1;
         // unreachable
         if(curr_route->cost >= INFINITY) to_delete_flag = 1;
         if(to_delete_flag){
@@ -834,6 +865,8 @@ void clean_forward_list(route_t* route_list_first){
             // first we check if the route is a dirrect route, is yes we restore its default value (from neighbor list)
             route_t* traverse_list = neighbors_first; 
             route_t* exact_match_route = NULL;
+
+// printf("AAAA \n");
             while(traverse_list!=NULL){
                 uint32_t mask = traverse_list->mask;
                 if((temp_to_delete->subnet & mask)==(traverse_list->subnet & mask)){
@@ -843,19 +876,27 @@ void clean_forward_list(route_t* route_list_first){
                         break;
                     }
                 }
+                traverse_list = traverse_list->next;
             }
+
+printf("BBBB \n");
+            print_ip(curr_route->subnet);
             // exact match route is in neighbor list!
-            if(exact_match_route != NULL){ // we got a match, have to restore
+            if(exact_match_route != NULL && exact_match_route->cost<INFINITY){ // we got a match, have to restore
                 restore_route_from_neighbor_list(exact_match_route, curr_route);
+                // printf("FFFF \n");
                 // no need to delete ,thus jump the free part
                 curr_route = curr_route->next;
                 continue;
             }else{ //simply delete
                 if(prev_route==NULL){//this indicate that curr_route is the first of the list,
                 // thus we set the new first as the next route
-                    route_list_first = curr_route->next;
+printf("QQQQ \n");
+// print_ip(curr_route->subnet);
+                    forward_table_first = curr_route->next;
                     prev_route = NULL; //previous_route still NULL
                 }else{
+printf("wwww \n");
                     // set the prev_route->next to the next route. jump the current one
                     prev_route->next = curr_route->next;
                     // and do not update the previous route, since it will still be the same one in next iteration
@@ -866,10 +907,22 @@ void clean_forward_list(route_t* route_list_first){
             free(temp_to_delete);  //purpose is to free the useless route to save memory space
             // *******************TODO , double check this free!!!***********************
         }else{ //no deletion happens
+        printf("CCCC \n");
             prev_route = curr_route;
             curr_route = curr_route->next;
         }
+        printf("EXIT? \n");
     }
+            printf("EXITing \n");
+                    if (DEBUG){
+            printf("CLEAN UP CLEANUP !\n");
+            printf("print forward table\n");
+            print_routing_table(forward_table_first);
+            printf("print neighbor table\n");
+            print_routing_table(neighbors_first);
+            // printf("route_last_update = %ld \n", route_last_update);
+        }
+                    printf("EXIT \n");
 }
 
 void restore_route_from_neighbor_list(route_t* neighbor_list_route, route_t* forward_list_route){
@@ -881,4 +934,37 @@ void restore_route_from_neighbor_list(route_t* neighbor_list_route, route_t* for
     forward_list_route->next_hop_ip = neighbor_list_route->next_hop_ip;
     forward_list_route->outgoing_intf = neighbor_list_route->outgoing_intf;
     forward_list_route->subnet = neighbor_list_route->subnet;
+}
+
+void clean_neighbor_list(route_t* list_first){
+    // we traverse the neighbor list, it's simple. just delete all unreachable routes, since neighbor list
+    // doesn't have timeout issue.
+    route_t* curr_route = list_first;
+    route_t* prev_route = NULL;
+    printf("Clean up neighbor list\n");
+    
+    while(curr_route!=NULL){
+        route_t* to_delete_route = curr_route;
+        if(curr_route->cost>=INFINITY){
+            if(prev_route == NULL){
+                printf("deleting AAAAA\n");
+                // the to delete route is the first in the list     
+                curr_route = curr_route->next;
+                neighbors_first = curr_route;
+                // free(to_delete_route);
+                continue;
+            }else{
+                printf("deleting BBBBB\n");
+                prev_route->next = curr_route->next;
+                curr_route = curr_route->next;
+                // free(to_delete_route);
+                continue;
+            }
+        }else{
+            // reachable route, simply go to the next
+            printf("nothing happened \n");
+            prev_route = curr_route;
+            curr_route = curr_route->next;
+        }
+    }
 }
