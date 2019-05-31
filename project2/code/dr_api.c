@@ -16,7 +16,7 @@
 
 
 // debugging tools
-#define DEBUG 1
+#define DEBUG 0
 #define LOOPDEBUG 0
 
 /* internal data structures */
@@ -275,6 +275,7 @@ void dr_init(unsigned (*func_dr_interface_count)(),
 }
 
 next_hop_t safe_dr_get_next_hop(uint32_t ip) {
+    clean_neighbor_list(neighbors_first);
     clean_forward_list(forward_table_first);
     next_hop_t hop;
     hop.interface = 0;
@@ -316,12 +317,27 @@ next_hop_t safe_dr_get_next_hop(uint32_t ip) {
  *
  * @param len  The number of bytes in the payload.
  */
+
+// int get_num_entries(rip_header_t* header){
+//     int counter = 0;
+//     rip_entry_t* entry= header->entries;
+//     while(entry != NULL){
+//         counter++; entry++;
+//     }
+
+// }
+
 void safe_dr_handle_packet(uint32_t ip, unsigned intf,
                            char* buf /* borrowed */, unsigned len) {
     /* handle the dynamic routing payload in the buf buffer */
     if(LOOPDEBUG) printf("enterting handle packet method!\n");
    
     uint32_t ip_host = ntohl(ip);
+            printf("num_entries: %d", ((int)len - 4)/20);
+            printf("IN HANDLE print one entry in the payload");
+            print_ip(((rip_header_t*)buf)->entries[0].ip);
+
+
 
     // correspond to the 3.9 input processing section in the protocol description
     if((!validate_packet((rip_header_t*)buf, ip_host, intf))||(((rip_header_t*)buf)->command!=RIP_COMMAND_RESPONSE)){
@@ -387,7 +403,8 @@ void safe_dr_handle_packet(uint32_t ip, unsigned intf,
 
             while(traverse_list!=NULL){
                 uint32_t mask = traverse_list->mask;
-                if((ip_host & mask)==(traverse_list->subnet & mask)){
+                if((entry.ip & mask)==(traverse_list->subnet & mask)){
+                // if((ip_host & mask)==(traverse_list->subnet & mask)){
                     // if the masked ip matches
                     if (mask == entry.subnet_mask){
                         exact_match_route = traverse_list;
@@ -398,8 +415,6 @@ void safe_dr_handle_packet(uint32_t ip, unsigned intf,
 
             struct timeval now;
             gettimeofday(&now, NULL);
-           
-
             // general case 1: found a match
 
             if(exact_match_route!=NULL)
@@ -426,11 +441,17 @@ void safe_dr_handle_packet(uint32_t ip, unsigned intf,
                 }
             }else
             { // didn't find a exact match route, need to insert in the forward table
+                printf("good night entry,ip\n");
+                print_ip(entry.ip);
+
+                printf("good boy  ip_host\n");
+                print_ip(ip_host);
+                exact_match_route = (route_t*) malloc(sizeof(route_t));
                 exact_match_route->subnet = entry.ip;
                 exact_match_route->is_garbage = 0; //don't have to implement
                 exact_match_route->last_updated = now;
                 exact_match_route->mask = entry.subnet_mask;
-                exact_match_route->next_hop_ip = entry.ip;
+                exact_match_route->next_hop_ip = ip_host;
                 exact_match_route->outgoing_intf = (uint32_t) intf;
                 // simply add, so no need for comparison of cost
                 exact_match_route->cost = entry.metric;
@@ -584,6 +605,7 @@ static void safe_dr_interface_changed(unsigned intf,
         }
 
         // clean the table
+
         clean_forward_list(forward_table_first);
         free(to_delete_route);
     }else if (cost_changed && dr_get_interface(intf).enabled){
@@ -694,7 +716,6 @@ void print_routing_table(route_t *head){
     }
 }
 
-
 void advertise_to_neighbors(int num_interfaces){
     // first we get how many entires are there in the forward table
     int route_entry_counter = 0;
@@ -711,25 +732,12 @@ void advertise_to_neighbors(int num_interfaces){
             // each packet contains: RIP header (size = 4), forward table (entry_counter * sizeof(entry)) 
             // char* payload_header = (char*)malloc(4 + 20*entry_counter);
             rip_header_t* payload_header = (rip_header_t*)malloc(4 + 20*route_entry_counter);
-            // now start making the RIP advertisement packet
-            //     typedef struct rip_header_t {
-            //     char        command;
-            //     char        version;
-            //     uint16_t    pad;        /* just put zero in this field */
-            //     rip_entry_t entries[0];
-            // } __attribute__ ((packed)) rip_header_t;
+
             payload_header->pad = (uint16_t) 0;
             payload_header->version = RIP_VERSION;
             // regular update, so response messages
             payload_header->command = RIP_COMMAND_RESPONSE;
-            // typedef struct rip_entry_t {
-            //     uint16_t addr_family;
-            //     uint16_t pad;           /* just put zero in this field */
-            //     uint32_t ip;
-            //     uint32_t subnet_mask;
-            //     uint32_t next_hop;
-            //     uint32_t metric;
-            // } __attribute__ ((packed)) rip_entry_t;
+
             route_t* curr_route_entry = forward_table_first;
             for(int j = 0; j < route_entry_counter; j++){
                 // initialize entries
@@ -755,8 +763,12 @@ void advertise_to_neighbors(int num_interfaces){
             }
             // advertise(send) the payload
             // i_th interface
-            dr_send_payload(RIP_IP,RIP_IP, i, (char*)payload_header, 4 + 20*route_entry_counter);
+            printf("len of payload: %d", route_entry_counter);
+            
+            printf("print one entry in the payload");
+            print_ip(payload_header->entries[0].ip);
 
+            dr_send_payload(RIP_IP,RIP_IP, i, (char*)payload_header, 4 + 20*route_entry_counter);
             free(payload_header);
         }
     }

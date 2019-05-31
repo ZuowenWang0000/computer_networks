@@ -1,1 +1,2959 @@
 ******** Starting new dr instance ********
+******** Starting new dr instance ********
+******** Starting new dr instance ********
+******** Starting new dr instance ********
+connected to the LVNS server
+len of payload: 2print one entry in the payload1.3.0.10
+len of payload: 2print one entry in the payload1.3.0.10
+*********printing full forward table*********
+Entry 0:
+	Subnet: 10.0.3.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.1
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Entry 1:
+	Subnet: 10.0.1.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.0
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+*********printing neighbor table*********
+Entry 0:
+	Subnet: 10.0.3.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.1
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Entry 1:
+	Subnet: 10.0.1.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.0
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+num_entries: 3IN HANDLE print one entry in the payload2.0.168.192
+num_entries: 2IN HANDLE print one entry in the payload3.3.0.10
+Clean up neighbor list
+nothing happened 
+nothing happened 
+EEEE 
+BBBB 
+10.0.3.1
+EEEE 
+BBBB 
+10.0.1.1
+EXITing 
+EXIT 
+Entry 0:
+	Subnet: 10.0.3.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.1
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Entry 1:
+	Subnet: 10.0.1.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.0
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Clean up neighbor list
+nothing happened 
+nothing happened 
+EEEE 
+BBBB 
+10.0.3.1
+EEEE 
+BBBB 
+10.0.1.1
+EXITing 
+EXIT 
+Entry 0:
+	Subnet: 10.0.3.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.1
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Entry 1:
+	Subnet: 10.0.1.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.0
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Clean up neighbor list
+nothing happened 
+nothing happened 
+EEEE 
+BBBB 
+10.0.3.1
+EEEE 
+BBBB 
+10.0.1.1
+EXITing 
+EXIT 
+Entry 0:
+	Subnet: 10.0.3.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.1
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Entry 1:
+	Subnet: 10.0.1.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.0
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Clean up neighbor list
+nothing happened 
+nothing happened 
+EEEE 
+BBBB 
+10.0.3.1
+EEEE 
+BBBB 
+10.0.1.1
+EXITing 
+EXIT 
+Entry 0:
+	Subnet: 10.0.3.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.1
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Entry 1:
+	Subnet: 10.0.1.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.0
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Clean up neighbor list
+nothing happened 
+nothing happened 
+EEEE 
+BBBB 
+10.0.3.1
+EEEE 
+BBBB 
+10.0.1.1
+EXITing 
+EXIT 
+Entry 0:
+	Subnet: 10.0.3.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.1
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Entry 1:
+	Subnet: 10.0.1.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.0
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Clean up neighbor list
+nothing happened 
+nothing happened 
+EEEE 
+BBBB 
+10.0.3.1
+EEEE 
+BBBB 
+10.0.1.1
+EXITing 
+EXIT 
+Entry 0:
+	Subnet: 10.0.3.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.1
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Entry 1:
+	Subnet: 10.0.1.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.0
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Clean up neighbor list
+nothing happened 
+nothing happened 
+EEEE 
+BBBB 
+10.0.3.1
+EEEE 
+BBBB 
+10.0.1.1
+EXITing 
+EXIT 
+Entry 0:
+	Subnet: 10.0.3.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.1
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Entry 1:
+	Subnet: 10.0.1.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.0
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Clean up neighbor list
+nothing happened 
+nothing happened 
+EEEE 
+BBBB 
+10.0.3.1
+EEEE 
+BBBB 
+10.0.1.1
+EXITing 
+EXIT 
+Entry 0:
+	Subnet: 10.0.3.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.1
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Entry 1:
+	Subnet: 10.0.1.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.0
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Clean up neighbor list
+nothing happened 
+nothing happened 
+EEEE 
+BBBB 
+10.0.3.1
+EEEE 
+BBBB 
+10.0.1.1
+EXITing 
+EXIT 
+Entry 0:
+	Subnet: 10.0.3.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.1
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Entry 1:
+	Subnet: 10.0.1.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.0
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Clean up neighbor list
+nothing happened 
+nothing happened 
+EEEE 
+BBBB 
+10.0.3.1
+EEEE 
+BBBB 
+10.0.1.1
+EXITing 
+EXIT 
+len of payload: 2print one entry in the payload1.3.0.10
+len of payload: 2print one entry in the payload1.3.0.10
+Entry 0:
+	Subnet: 10.0.3.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.1
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Entry 1:
+	Subnet: 10.0.1.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.0
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+num_entries: 3IN HANDLE print one entry in the payload2.0.168.192
+num_entries: 2IN HANDLE print one entry in the payload3.3.0.10
+Clean up neighbor list
+nothing happened 
+nothing happened 
+EEEE 
+BBBB 
+10.0.3.1
+EEEE 
+BBBB 
+10.0.1.1
+EXITing 
+EXIT 
+Entry 0:
+	Subnet: 10.0.3.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.1
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Entry 1:
+	Subnet: 10.0.1.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.0
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Clean up neighbor list
+nothing happened 
+nothing happened 
+EEEE 
+BBBB 
+10.0.3.1
+EEEE 
+BBBB 
+10.0.1.1
+EXITing 
+EXIT 
+Entry 0:
+	Subnet: 10.0.3.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.1
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Entry 1:
+	Subnet: 10.0.1.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.0
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Clean up neighbor list
+nothing happened 
+nothing happened 
+EEEE 
+BBBB 
+10.0.3.1
+EEEE 
+BBBB 
+10.0.1.1
+EXITing 
+EXIT 
+Entry 0:
+	Subnet: 10.0.3.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.1
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Entry 1:
+	Subnet: 10.0.1.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.0
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Clean up neighbor list
+nothing happened 
+nothing happened 
+EEEE 
+BBBB 
+10.0.3.1
+EEEE 
+BBBB 
+10.0.1.1
+EXITing 
+EXIT 
+Entry 0:
+	Subnet: 10.0.3.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.1
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Entry 1:
+	Subnet: 10.0.1.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.0
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Clean up neighbor list
+nothing happened 
+nothing happened 
+EEEE 
+BBBB 
+10.0.3.1
+EEEE 
+BBBB 
+10.0.1.1
+EXITing 
+EXIT 
+Entry 0:
+	Subnet: 10.0.3.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.1
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Entry 1:
+	Subnet: 10.0.1.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.0
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Clean up neighbor list
+nothing happened 
+nothing happened 
+EEEE 
+BBBB 
+10.0.3.1
+EEEE 
+BBBB 
+10.0.1.1
+EXITing 
+EXIT 
+Entry 0:
+	Subnet: 10.0.3.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.1
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Entry 1:
+	Subnet: 10.0.1.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.0
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Clean up neighbor list
+nothing happened 
+nothing happened 
+EEEE 
+BBBB 
+10.0.3.1
+EEEE 
+BBBB 
+10.0.1.1
+EXITing 
+EXIT 
+Entry 0:
+	Subnet: 10.0.3.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.1
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Entry 1:
+	Subnet: 10.0.1.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.0
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Clean up neighbor list
+nothing happened 
+nothing happened 
+EEEE 
+BBBB 
+10.0.3.1
+EEEE 
+BBBB 
+10.0.1.1
+EXITing 
+EXIT 
+Entry 0:
+	Subnet: 10.0.3.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.1
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Entry 1:
+	Subnet: 10.0.1.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.0
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Clean up neighbor list
+nothing happened 
+nothing happened 
+EEEE 
+BBBB 
+10.0.3.1
+EEEE 
+BBBB 
+10.0.1.1
+EXITing 
+EXIT 
+Entry 0:
+	Subnet: 10.0.3.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.1
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Entry 1:
+	Subnet: 10.0.1.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.0
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Clean up neighbor list
+nothing happened 
+nothing happened 
+EEEE 
+BBBB 
+10.0.3.1
+EEEE 
+BBBB 
+10.0.1.1
+EXITing 
+EXIT 
+len of payload: 2print one entry in the payload1.3.0.10
+len of payload: 2print one entry in the payload1.3.0.10
+Entry 0:
+	Subnet: 10.0.3.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.1
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Entry 1:
+	Subnet: 10.0.1.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.0
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+num_entries: 3IN HANDLE print one entry in the payload2.0.168.192
+num_entries: 2IN HANDLE print one entry in the payload3.3.0.10
+Clean up neighbor list
+nothing happened 
+nothing happened 
+EEEE 
+BBBB 
+10.0.3.1
+EEEE 
+BBBB 
+10.0.1.1
+EXITing 
+EXIT 
+Entry 0:
+	Subnet: 10.0.3.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.1
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Entry 1:
+	Subnet: 10.0.1.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.0
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Clean up neighbor list
+nothing happened 
+nothing happened 
+EEEE 
+BBBB 
+10.0.3.1
+EEEE 
+BBBB 
+10.0.1.1
+EXITing 
+EXIT 
+Entry 0:
+	Subnet: 10.0.3.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.1
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Entry 1:
+	Subnet: 10.0.1.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.0
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Clean up neighbor list
+nothing happened 
+nothing happened 
+EEEE 
+BBBB 
+10.0.3.1
+EEEE 
+BBBB 
+10.0.1.1
+EXITing 
+EXIT 
+Entry 0:
+	Subnet: 10.0.3.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.1
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Entry 1:
+	Subnet: 10.0.1.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.0
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Clean up neighbor list
+nothing happened 
+nothing happened 
+EEEE 
+BBBB 
+10.0.3.1
+EEEE 
+BBBB 
+10.0.1.1
+EXITing 
+EXIT 
+Entry 0:
+	Subnet: 10.0.3.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.1
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Entry 1:
+	Subnet: 10.0.1.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.0
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Clean up neighbor list
+nothing happened 
+nothing happened 
+EEEE 
+BBBB 
+10.0.3.1
+EEEE 
+BBBB 
+10.0.1.1
+EXITing 
+EXIT 
+Entry 0:
+	Subnet: 10.0.3.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.1
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Entry 1:
+	Subnet: 10.0.1.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.0
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Clean up neighbor list
+nothing happened 
+nothing happened 
+EEEE 
+BBBB 
+10.0.3.1
+EEEE 
+BBBB 
+10.0.1.1
+EXITing 
+EXIT 
+Entry 0:
+	Subnet: 10.0.3.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.1
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Entry 1:
+	Subnet: 10.0.1.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.0
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Clean up neighbor list
+nothing happened 
+nothing happened 
+EEEE 
+BBBB 
+10.0.3.1
+EEEE 
+BBBB 
+10.0.1.1
+EXITing 
+EXIT 
+Entry 0:
+	Subnet: 10.0.3.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.1
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Entry 1:
+	Subnet: 10.0.1.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.0
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Clean up neighbor list
+nothing happened 
+nothing happened 
+EEEE 
+BBBB 
+10.0.3.1
+EEEE 
+BBBB 
+10.0.1.1
+EXITing 
+EXIT 
+Entry 0:
+	Subnet: 10.0.3.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.1
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Entry 1:
+	Subnet: 10.0.1.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.0
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Clean up neighbor list
+nothing happened 
+nothing happened 
+EEEE 
+BBBB 
+10.0.3.1
+EEEE 
+BBBB 
+10.0.1.1
+EXITing 
+EXIT 
+Entry 0:
+	Subnet: 10.0.3.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.1
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Entry 1:
+	Subnet: 10.0.1.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.0
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Clean up neighbor list
+nothing happened 
+nothing happened 
+EEEE 
+BBBB 
+10.0.3.1
+EEEE 
+BBBB 
+10.0.1.1
+EXITing 
+EXIT 
+len of payload: 2print one entry in the payload1.3.0.10
+len of payload: 2print one entry in the payload1.3.0.10
+Entry 0:
+	Subnet: 10.0.3.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.1
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Entry 1:
+	Subnet: 10.0.1.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.0
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+num_entries: 3IN HANDLE print one entry in the payload2.0.168.192
+num_entries: 2IN HANDLE print one entry in the payload3.3.0.10
+Clean up neighbor list
+nothing happened 
+nothing happened 
+EEEE 
+BBBB 
+10.0.3.1
+EEEE 
+BBBB 
+10.0.1.1
+EXITing 
+EXIT 
+Entry 0:
+	Subnet: 10.0.3.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.1
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Entry 1:
+	Subnet: 10.0.1.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.0
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Clean up neighbor list
+nothing happened 
+nothing happened 
+EEEE 
+BBBB 
+10.0.3.1
+EEEE 
+BBBB 
+10.0.1.1
+EXITing 
+EXIT 
+Entry 0:
+	Subnet: 10.0.3.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.1
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Entry 1:
+	Subnet: 10.0.1.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.0
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Clean up neighbor list
+nothing happened 
+nothing happened 
+EEEE 
+BBBB 
+10.0.3.1
+EEEE 
+BBBB 
+10.0.1.1
+EXITing 
+EXIT 
+Entry 0:
+	Subnet: 10.0.3.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.1
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Entry 1:
+	Subnet: 10.0.1.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.0
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Clean up neighbor list
+nothing happened 
+nothing happened 
+EEEE 
+BBBB 
+10.0.3.1
+EEEE 
+BBBB 
+10.0.1.1
+EXITing 
+EXIT 
+Entry 0:
+	Subnet: 10.0.3.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.1
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Entry 1:
+	Subnet: 10.0.1.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.0
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Clean up neighbor list
+nothing happened 
+nothing happened 
+EEEE 
+BBBB 
+10.0.3.1
+EEEE 
+BBBB 
+10.0.1.1
+EXITing 
+EXIT 
+Entry 0:
+	Subnet: 10.0.3.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.1
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Entry 1:
+	Subnet: 10.0.1.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.0
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Clean up neighbor list
+nothing happened 
+nothing happened 
+EEEE 
+BBBB 
+10.0.3.1
+EEEE 
+BBBB 
+10.0.1.1
+EXITing 
+EXIT 
+Entry 0:
+	Subnet: 10.0.3.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.1
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Entry 1:
+	Subnet: 10.0.1.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.0
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Clean up neighbor list
+nothing happened 
+nothing happened 
+EEEE 
+BBBB 
+10.0.3.1
+EEEE 
+BBBB 
+10.0.1.1
+EXITing 
+EXIT 
+Entry 0:
+	Subnet: 10.0.3.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.1
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Entry 1:
+	Subnet: 10.0.1.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.0
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Clean up neighbor list
+nothing happened 
+nothing happened 
+EEEE 
+BBBB 
+10.0.3.1
+EEEE 
+BBBB 
+10.0.1.1
+EXITing 
+EXIT 
+Entry 0:
+	Subnet: 10.0.3.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.1
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Entry 1:
+	Subnet: 10.0.1.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.0
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Clean up neighbor list
+nothing happened 
+nothing happened 
+EEEE 
+BBBB 
+10.0.3.1
+EEEE 
+BBBB 
+10.0.1.1
+EXITing 
+EXIT 
+Entry 0:
+	Subnet: 10.0.3.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.1
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Entry 1:
+	Subnet: 10.0.1.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.0
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Clean up neighbor list
+nothing happened 
+nothing happened 
+EEEE 
+BBBB 
+10.0.3.1
+EEEE 
+BBBB 
+10.0.1.1
+EXITing 
+EXIT 
+len of payload: 2print one entry in the payload1.3.0.10
+len of payload: 2print one entry in the payload1.3.0.10
+Entry 0:
+	Subnet: 10.0.3.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.1
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Entry 1:
+	Subnet: 10.0.1.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.0
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+num_entries: 3IN HANDLE print one entry in the payload2.0.168.192
+num_entries: 2IN HANDLE print one entry in the payload3.3.0.10
+Clean up neighbor list
+nothing happened 
+nothing happened 
+EEEE 
+BBBB 
+10.0.3.1
+EEEE 
+BBBB 
+10.0.1.1
+EXITing 
+EXIT 
+Entry 0:
+	Subnet: 10.0.3.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.1
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Entry 1:
+	Subnet: 10.0.1.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.0
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Clean up neighbor list
+nothing happened 
+nothing happened 
+EEEE 
+BBBB 
+10.0.3.1
+EEEE 
+BBBB 
+10.0.1.1
+EXITing 
+EXIT 
+Entry 0:
+	Subnet: 10.0.3.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.1
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Entry 1:
+	Subnet: 10.0.1.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.0
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Clean up neighbor list
+nothing happened 
+nothing happened 
+EEEE 
+BBBB 
+10.0.3.1
+EEEE 
+BBBB 
+10.0.1.1
+EXITing 
+EXIT 
+Entry 0:
+	Subnet: 10.0.3.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.1
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Entry 1:
+	Subnet: 10.0.1.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.0
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Clean up neighbor list
+nothing happened 
+nothing happened 
+EEEE 
+BBBB 
+10.0.3.1
+EEEE 
+BBBB 
+10.0.1.1
+EXITing 
+EXIT 
+Entry 0:
+	Subnet: 10.0.3.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.1
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Entry 1:
+	Subnet: 10.0.1.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.0
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Clean up neighbor list
+nothing happened 
+nothing happened 
+EEEE 
+BBBB 
+10.0.3.1
+EEEE 
+BBBB 
+10.0.1.1
+EXITing 
+EXIT 
+Entry 0:
+	Subnet: 10.0.3.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.1
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Entry 1:
+	Subnet: 10.0.1.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.0
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Clean up neighbor list
+nothing happened 
+nothing happened 
+EEEE 
+BBBB 
+10.0.3.1
+EEEE 
+BBBB 
+10.0.1.1
+EXITing 
+EXIT 
+Entry 0:
+	Subnet: 10.0.3.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.1
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Entry 1:
+	Subnet: 10.0.1.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.0
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Clean up neighbor list
+nothing happened 
+nothing happened 
+EEEE 
+BBBB 
+10.0.3.1
+EEEE 
+BBBB 
+10.0.1.1
+EXITing 
+EXIT 
+Entry 0:
+	Subnet: 10.0.3.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.1
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Entry 1:
+	Subnet: 10.0.1.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.0
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Clean up neighbor list
+nothing happened 
+nothing happened 
+EEEE 
+BBBB 
+10.0.3.1
+EEEE 
+BBBB 
+10.0.1.1
+EXITing 
+EXIT 
+Entry 0:
+	Subnet: 10.0.3.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.1
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Entry 1:
+	Subnet: 10.0.1.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.0
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Clean up neighbor list
+nothing happened 
+nothing happened 
+EEEE 
+BBBB 
+10.0.3.1
+EEEE 
+BBBB 
+10.0.1.1
+EXITing 
+EXIT 
+Entry 0:
+	Subnet: 10.0.3.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.1
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Entry 1:
+	Subnet: 10.0.1.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.0
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Clean up neighbor list
+nothing happened 
+nothing happened 
+EEEE 
+BBBB 
+10.0.3.1
+EEEE 
+BBBB 
+10.0.1.1
+EXITing 
+EXIT 
+len of payload: 2print one entry in the payload1.3.0.10
+len of payload: 2print one entry in the payload1.3.0.10
+Entry 0:
+	Subnet: 10.0.3.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.1
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Entry 1:
+	Subnet: 10.0.1.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.0
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+num_entries: 3IN HANDLE print one entry in the payload2.0.168.192
+num_entries: 2IN HANDLE print one entry in the payload3.3.0.10
+Clean up neighbor list
+nothing happened 
+nothing happened 
+EEEE 
+BBBB 
+10.0.3.1
+EEEE 
+BBBB 
+10.0.1.1
+EXITing 
+EXIT 
+Entry 0:
+	Subnet: 10.0.3.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.1
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Entry 1:
+	Subnet: 10.0.1.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.0
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Clean up neighbor list
+nothing happened 
+nothing happened 
+EEEE 
+BBBB 
+10.0.3.1
+EEEE 
+BBBB 
+10.0.1.1
+EXITing 
+EXIT 
+Entry 0:
+	Subnet: 10.0.3.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.1
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Entry 1:
+	Subnet: 10.0.1.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.0
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Clean up neighbor list
+nothing happened 
+nothing happened 
+EEEE 
+BBBB 
+10.0.3.1
+EEEE 
+BBBB 
+10.0.1.1
+EXITing 
+EXIT 
+Entry 0:
+	Subnet: 10.0.3.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.1
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Entry 1:
+	Subnet: 10.0.1.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.0
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Clean up neighbor list
+nothing happened 
+nothing happened 
+EEEE 
+BBBB 
+10.0.3.1
+EEEE 
+BBBB 
+10.0.1.1
+EXITing 
+EXIT 
+Entry 0:
+	Subnet: 10.0.3.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.1
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Entry 1:
+	Subnet: 10.0.1.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.0
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Clean up neighbor list
+nothing happened 
+nothing happened 
+EEEE 
+BBBB 
+10.0.3.1
+EEEE 
+BBBB 
+10.0.1.1
+EXITing 
+EXIT 
+Entry 0:
+	Subnet: 10.0.3.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.1
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Entry 1:
+	Subnet: 10.0.1.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.0
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Clean up neighbor list
+nothing happened 
+nothing happened 
+EEEE 
+BBBB 
+10.0.3.1
+EEEE 
+BBBB 
+10.0.1.1
+EXITing 
+EXIT 
+Entry 0:
+	Subnet: 10.0.3.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.1
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Entry 1:
+	Subnet: 10.0.1.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.0
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Clean up neighbor list
+nothing happened 
+nothing happened 
+EEEE 
+BBBB 
+10.0.3.1
+EEEE 
+BBBB 
+10.0.1.1
+EXITing 
+EXIT 
+Entry 0:
+	Subnet: 10.0.3.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.1
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Entry 1:
+	Subnet: 10.0.1.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.0
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Clean up neighbor list
+nothing happened 
+nothing happened 
+EEEE 
+BBBB 
+10.0.3.1
+EEEE 
+BBBB 
+10.0.1.1
+EXITing 
+EXIT 
+Entry 0:
+	Subnet: 10.0.3.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.1
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Entry 1:
+	Subnet: 10.0.1.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.0
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Clean up neighbor list
+nothing happened 
+nothing happened 
+EEEE 
+BBBB 
+10.0.3.1
+EEEE 
+BBBB 
+10.0.1.1
+EXITing 
+EXIT 
+Entry 0:
+	Subnet: 10.0.3.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.1
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Entry 1:
+	Subnet: 10.0.1.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.0
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+num_entries: 3IN HANDLE print one entry in the payload2.0.168.192
+Clean up neighbor list
+nothing happened 
+nothing happened 
+EEEE 
+BBBB 
+10.0.3.1
+EEEE 
+BBBB 
+10.0.1.1
+EXITing 
+EXIT 
+len of payload: 2print one entry in the payload1.3.0.10
+len of payload: 2print one entry in the payload1.3.0.10
+Entry 0:
+	Subnet: 10.0.3.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.1
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Entry 1:
+	Subnet: 10.0.1.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.0
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+num_entries: 2IN HANDLE print one entry in the payload3.3.0.10
+Clean up neighbor list
+nothing happened 
+nothing happened 
+EEEE 
+BBBB 
+10.0.3.1
+EEEE 
+BBBB 
+10.0.1.1
+EXITing 
+EXIT 
+Entry 0:
+	Subnet: 10.0.3.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.1
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Entry 1:
+	Subnet: 10.0.1.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.0
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Clean up neighbor list
+nothing happened 
+nothing happened 
+EEEE 
+BBBB 
+10.0.3.1
+EEEE 
+BBBB 
+10.0.1.1
+EXITing 
+EXIT 
+Entry 0:
+	Subnet: 10.0.3.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.1
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Entry 1:
+	Subnet: 10.0.1.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.0
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Clean up neighbor list
+nothing happened 
+nothing happened 
+EEEE 
+BBBB 
+10.0.3.1
+EEEE 
+BBBB 
+10.0.1.1
+EXITing 
+EXIT 
+Entry 0:
+	Subnet: 10.0.3.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.1
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Entry 1:
+	Subnet: 10.0.1.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.0
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Clean up neighbor list
+nothing happened 
+nothing happened 
+EEEE 
+BBBB 
+10.0.3.1
+EEEE 
+BBBB 
+10.0.1.1
+EXITing 
+EXIT 
+Entry 0:
+	Subnet: 10.0.3.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.1
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Entry 1:
+	Subnet: 10.0.1.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.0
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Clean up neighbor list
+nothing happened 
+nothing happened 
+EEEE 
+BBBB 
+10.0.3.1
+EEEE 
+BBBB 
+10.0.1.1
+EXITing 
+EXIT 
+Entry 0:
+	Subnet: 10.0.3.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.1
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Entry 1:
+	Subnet: 10.0.1.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.0
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Clean up neighbor list
+nothing happened 
+nothing happened 
+EEEE 
+BBBB 
+10.0.3.1
+EEEE 
+BBBB 
+10.0.1.1
+EXITing 
+EXIT 
+Entry 0:
+	Subnet: 10.0.3.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.1
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Entry 1:
+	Subnet: 10.0.1.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.0
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Clean up neighbor list
+nothing happened 
+nothing happened 
+EEEE 
+BBBB 
+10.0.3.1
+EEEE 
+BBBB 
+10.0.1.1
+EXITing 
+EXIT 
+Entry 0:
+	Subnet: 10.0.3.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.1
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Entry 1:
+	Subnet: 10.0.1.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.0
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Clean up neighbor list
+nothing happened 
+nothing happened 
+EEEE 
+BBBB 
+10.0.3.1
+EEEE 
+BBBB 
+10.0.1.1
+EXITing 
+EXIT 
+Entry 0:
+	Subnet: 10.0.3.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.1
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Entry 1:
+	Subnet: 10.0.1.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.0
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Clean up neighbor list
+nothing happened 
+nothing happened 
+EEEE 
+BBBB 
+10.0.3.1
+EEEE 
+BBBB 
+10.0.1.1
+EXITing 
+EXIT 
+Entry 0:
+	Subnet: 10.0.3.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.1
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Entry 1:
+	Subnet: 10.0.1.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.0
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+num_entries: 3IN HANDLE print one entry in the payload2.0.168.192
+Clean up neighbor list
+nothing happened 
+nothing happened 
+EEEE 
+BBBB 
+10.0.3.1
+EEEE 
+BBBB 
+10.0.1.1
+EXITing 
+EXIT 
+len of payload: 2print one entry in the payload1.3.0.10
+len of payload: 2print one entry in the payload1.3.0.10
+Entry 0:
+	Subnet: 10.0.3.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.1
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Entry 1:
+	Subnet: 10.0.1.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.0
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+num_entries: 2IN HANDLE print one entry in the payload3.3.0.10
+Clean up neighbor list
+nothing happened 
+nothing happened 
+EEEE 
+BBBB 
+10.0.3.1
+EEEE 
+BBBB 
+10.0.1.1
+EXITing 
+EXIT 
+Entry 0:
+	Subnet: 10.0.3.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.1
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Entry 1:
+	Subnet: 10.0.1.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.0
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Clean up neighbor list
+nothing happened 
+nothing happened 
+EEEE 
+BBBB 
+10.0.3.1
+EEEE 
+BBBB 
+10.0.1.1
+EXITing 
+EXIT 
+Entry 0:
+	Subnet: 10.0.3.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.1
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Entry 1:
+	Subnet: 10.0.1.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.0
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Clean up neighbor list
+nothing happened 
+nothing happened 
+EEEE 
+BBBB 
+10.0.3.1
+EEEE 
+BBBB 
+10.0.1.1
+EXITing 
+EXIT 
+Entry 0:
+	Subnet: 10.0.3.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.1
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Entry 1:
+	Subnet: 10.0.1.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.0
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Clean up neighbor list
+nothing happened 
+nothing happened 
+EEEE 
+BBBB 
+10.0.3.1
+EEEE 
+BBBB 
+10.0.1.1
+EXITing 
+EXIT 
+Entry 0:
+	Subnet: 10.0.3.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.1
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Entry 1:
+	Subnet: 10.0.1.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.0
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Clean up neighbor list
+nothing happened 
+nothing happened 
+EEEE 
+BBBB 
+10.0.3.1
+EEEE 
+BBBB 
+10.0.1.1
+EXITing 
+EXIT 
+Entry 0:
+	Subnet: 10.0.3.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.1
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Entry 1:
+	Subnet: 10.0.1.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.0
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Clean up neighbor list
+nothing happened 
+nothing happened 
+EEEE 
+BBBB 
+10.0.3.1
+EEEE 
+BBBB 
+10.0.1.1
+EXITing 
+EXIT 
+Entry 0:
+	Subnet: 10.0.3.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.1
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Entry 1:
+	Subnet: 10.0.1.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.0
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Clean up neighbor list
+nothing happened 
+nothing happened 
+EEEE 
+BBBB 
+10.0.3.1
+EEEE 
+BBBB 
+10.0.1.1
+EXITing 
+EXIT 
+Entry 0:
+	Subnet: 10.0.3.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.1
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Entry 1:
+	Subnet: 10.0.1.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.0
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Clean up neighbor list
+nothing happened 
+nothing happened 
+EEEE 
+BBBB 
+10.0.3.1
+EEEE 
+BBBB 
+10.0.1.1
+EXITing 
+EXIT 
+Entry 0:
+	Subnet: 10.0.3.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.1
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Entry 1:
+	Subnet: 10.0.1.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.0
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Clean up neighbor list
+nothing happened 
+nothing happened 
+EEEE 
+BBBB 
+10.0.3.1
+EEEE 
+BBBB 
+10.0.1.1
+EXITing 
+EXIT 
+Entry 0:
+	Subnet: 10.0.3.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.1
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Entry 1:
+	Subnet: 10.0.1.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.0
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+num_entries: 3IN HANDLE print one entry in the payload2.0.168.192
+Clean up neighbor list
+nothing happened 
+nothing happened 
+EEEE 
+BBBB 
+10.0.3.1
+EEEE 
+BBBB 
+10.0.1.1
+EXITing 
+EXIT 
+len of payload: 2print one entry in the payload1.3.0.10
+len of payload: 2print one entry in the payload1.3.0.10
+Entry 0:
+	Subnet: 10.0.3.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.1
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Entry 1:
+	Subnet: 10.0.1.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.0
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+num_entries: 2IN HANDLE print one entry in the payload3.3.0.10
+Clean up neighbor list
+nothing happened 
+nothing happened 
+EEEE 
+BBBB 
+10.0.3.1
+EEEE 
+BBBB 
+10.0.1.1
+EXITing 
+EXIT 
+Entry 0:
+	Subnet: 10.0.3.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.1
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Entry 1:
+	Subnet: 10.0.1.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.0
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Clean up neighbor list
+nothing happened 
+nothing happened 
+EEEE 
+BBBB 
+10.0.3.1
+EEEE 
+BBBB 
+10.0.1.1
+EXITing 
+EXIT 
+Entry 0:
+	Subnet: 10.0.3.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.1
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Entry 1:
+	Subnet: 10.0.1.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.0
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Clean up neighbor list
+nothing happened 
+nothing happened 
+EEEE 
+BBBB 
+10.0.3.1
+EEEE 
+BBBB 
+10.0.1.1
+EXITing 
+EXIT 
+Entry 0:
+	Subnet: 10.0.3.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.1
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Entry 1:
+	Subnet: 10.0.1.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.0
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Clean up neighbor list
+nothing happened 
+nothing happened 
+EEEE 
+BBBB 
+10.0.3.1
+EEEE 
+BBBB 
+10.0.1.1
+EXITing 
+EXIT 
+Entry 0:
+	Subnet: 10.0.3.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.1
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Entry 1:
+	Subnet: 10.0.1.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.0
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Clean up neighbor list
+nothing happened 
+nothing happened 
+EEEE 
+BBBB 
+10.0.3.1
+EEEE 
+BBBB 
+10.0.1.1
+EXITing 
+EXIT 
+Entry 0:
+	Subnet: 10.0.3.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.1
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Entry 1:
+	Subnet: 10.0.1.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.0
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Clean up neighbor list
+nothing happened 
+nothing happened 
+EEEE 
+BBBB 
+10.0.3.1
+EEEE 
+BBBB 
+10.0.1.1
+EXITing 
+EXIT 
+Entry 0:
+	Subnet: 10.0.3.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.1
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Entry 1:
+	Subnet: 10.0.1.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.0
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Clean up neighbor list
+nothing happened 
+nothing happened 
+EEEE 
+BBBB 
+10.0.3.1
+EEEE 
+BBBB 
+10.0.1.1
+EXITing 
+EXIT 
+Entry 0:
+	Subnet: 10.0.3.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.1
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Entry 1:
+	Subnet: 10.0.1.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.0
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Clean up neighbor list
+nothing happened 
+nothing happened 
+EEEE 
+BBBB 
+10.0.3.1
+EEEE 
+BBBB 
+10.0.1.1
+EXITing 
+EXIT 
+Entry 0:
+	Subnet: 10.0.3.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.1
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Entry 1:
+	Subnet: 10.0.1.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.0
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Clean up neighbor list
+nothing happened 
+nothing happened 
+EEEE 
+BBBB 
+10.0.3.1
+EEEE 
+BBBB 
+10.0.1.1
+EXITing 
+EXIT 
+Entry 0:
+	Subnet: 10.0.3.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.1
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Entry 1:
+	Subnet: 10.0.1.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.0
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+num_entries: 3IN HANDLE print one entry in the payload2.0.168.192
+Clean up neighbor list
+nothing happened 
+nothing happened 
+EEEE 
+BBBB 
+10.0.3.1
+EEEE 
+BBBB 
+10.0.1.1
+EXITing 
+EXIT 
+len of payload: 2print one entry in the payload1.3.0.10
+len of payload: 2print one entry in the payload1.3.0.10
+Entry 0:
+	Subnet: 10.0.3.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.1
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Entry 1:
+	Subnet: 10.0.1.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.0
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+num_entries: 2IN HANDLE print one entry in the payload3.3.0.10
+Clean up neighbor list
+nothing happened 
+nothing happened 
+EEEE 
+BBBB 
+10.0.3.1
+EEEE 
+BBBB 
+10.0.1.1
+EXITing 
+EXIT 
+Entry 0:
+	Subnet: 10.0.3.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.1
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Entry 1:
+	Subnet: 10.0.1.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.0
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Clean up neighbor list
+nothing happened 
+nothing happened 
+EEEE 
+BBBB 
+10.0.3.1
+EEEE 
+BBBB 
+10.0.1.1
+EXITing 
+EXIT 
+Entry 0:
+	Subnet: 10.0.3.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.1
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Entry 1:
+	Subnet: 10.0.1.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.0
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Clean up neighbor list
+nothing happened 
+nothing happened 
+EEEE 
+BBBB 
+10.0.3.1
+EEEE 
+BBBB 
+10.0.1.1
+EXITing 
+EXIT 
+Entry 0:
+	Subnet: 10.0.3.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.1
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Entry 1:
+	Subnet: 10.0.1.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.0
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Clean up neighbor list
+nothing happened 
+nothing happened 
+EEEE 
+BBBB 
+10.0.3.1
+EEEE 
+BBBB 
+10.0.1.1
+EXITing 
+EXIT 
+Entry 0:
+	Subnet: 10.0.3.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.1
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Entry 1:
+	Subnet: 10.0.1.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.0
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Clean up neighbor list
+nothing happened 
+nothing happened 
+EEEE 
+BBBB 
+10.0.3.1
+EEEE 
+BBBB 
+10.0.1.1
+EXITing 
+EXIT 
+Entry 0:
+	Subnet: 10.0.3.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.1
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Entry 1:
+	Subnet: 10.0.1.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.0
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Clean up neighbor list
+nothing happened 
+nothing happened 
+EEEE 
+BBBB 
+10.0.3.1
+EEEE 
+BBBB 
+10.0.1.1
+EXITing 
+EXIT 
+Entry 0:
+	Subnet: 10.0.3.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.1
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Entry 1:
+	Subnet: 10.0.1.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.0
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Clean up neighbor list
+nothing happened 
+nothing happened 
+EEEE 
+BBBB 
+10.0.3.1
+EEEE 
+BBBB 
+10.0.1.1
+EXITing 
+EXIT 
+Entry 0:
+	Subnet: 10.0.3.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.1
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Entry 1:
+	Subnet: 10.0.1.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.0
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Clean up neighbor list
+nothing happened 
+nothing happened 
+EEEE 
+BBBB 
+10.0.3.1
+EEEE 
+BBBB 
+10.0.1.1
+EXITing 
+EXIT 
+Entry 0:
+	Subnet: 10.0.3.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.1
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Entry 1:
+	Subnet: 10.0.1.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.0
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Clean up neighbor list
+nothing happened 
+nothing happened 
+EEEE 
+BBBB 
+10.0.3.1
+EEEE 
+BBBB 
+10.0.1.1
+EXITing 
+EXIT 
+Entry 0:
+	Subnet: 10.0.3.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.1
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Entry 1:
+	Subnet: 10.0.1.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.0
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+num_entries: 3IN HANDLE print one entry in the payload2.0.168.192
+num_entries: 2IN HANDLE print one entry in the payload3.3.0.10
+Clean up neighbor list
+nothing happened 
+nothing happened 
+EEEE 
+BBBB 
+10.0.3.1
+EEEE 
+BBBB 
+10.0.1.1
+EXITing 
+EXIT 
+len of payload: 2print one entry in the payload1.3.0.10
+len of payload: 2print one entry in the payload1.3.0.10
+Entry 0:
+	Subnet: 10.0.3.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.1
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Entry 1:
+	Subnet: 10.0.1.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.0
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Clean up neighbor list
+nothing happened 
+nothing happened 
+EEEE 
+BBBB 
+10.0.3.1
+EEEE 
+BBBB 
+10.0.1.1
+EXITing 
+EXIT 
+Entry 0:
+	Subnet: 10.0.3.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.1
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Entry 1:
+	Subnet: 10.0.1.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.0
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Clean up neighbor list
+nothing happened 
+nothing happened 
+EEEE 
+BBBB 
+10.0.3.1
+EEEE 
+BBBB 
+10.0.1.1
+EXITing 
+EXIT 
+Entry 0:
+	Subnet: 10.0.3.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.1
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Entry 1:
+	Subnet: 10.0.1.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.0
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Clean up neighbor list
+nothing happened 
+nothing happened 
+EEEE 
+BBBB 
+10.0.3.1
+EEEE 
+BBBB 
+10.0.1.1
+EXITing 
+EXIT 
+Entry 0:
+	Subnet: 10.0.3.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.1
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Entry 1:
+	Subnet: 10.0.1.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.0
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Clean up neighbor list
+nothing happened 
+nothing happened 
+EEEE 
+BBBB 
+10.0.3.1
+EEEE 
+BBBB 
+10.0.1.1
+EXITing 
+EXIT 
+Entry 0:
+	Subnet: 10.0.3.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.1
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Entry 1:
+	Subnet: 10.0.1.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.0
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Clean up neighbor list
+nothing happened 
+nothing happened 
+EEEE 
+BBBB 
+10.0.3.1
+EEEE 
+BBBB 
+10.0.1.1
+EXITing 
+EXIT 
+Entry 0:
+	Subnet: 10.0.3.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.1
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Entry 1:
+	Subnet: 10.0.1.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.0
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Clean up neighbor list
+nothing happened 
+nothing happened 
+EEEE 
+BBBB 
+10.0.3.1
+EEEE 
+BBBB 
+10.0.1.1
+EXITing 
+EXIT 
+Entry 0:
+	Subnet: 10.0.3.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.1
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Entry 1:
+	Subnet: 10.0.1.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.0
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Clean up neighbor list
+nothing happened 
+nothing happened 
+EEEE 
+BBBB 
+10.0.3.1
+EEEE 
+BBBB 
+10.0.1.1
+EXITing 
+EXIT 
+Entry 0:
+	Subnet: 10.0.3.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.1
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Entry 1:
+	Subnet: 10.0.1.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.0
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Clean up neighbor list
+nothing happened 
+nothing happened 
+EEEE 
+BBBB 
+10.0.3.1
+EEEE 
+BBBB 
+10.0.1.1
+EXITing 
+EXIT 
+Entry 0:
+	Subnet: 10.0.3.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.1
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Entry 1:
+	Subnet: 10.0.1.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.0
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Clean up neighbor list
+nothing happened 
+nothing happened 
+EEEE 
+BBBB 
+10.0.3.1
+EEEE 
+BBBB 
+10.0.1.1
+EXITing 
+EXIT 
+Entry 0:
+	Subnet: 10.0.3.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.1
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Entry 1:
+	Subnet: 10.0.1.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.0
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Clean up neighbor list
+nothing happened 
+nothing happened 
+EEEE 
+BBBB 
+10.0.3.1
+EEEE 
+BBBB 
+10.0.1.1
+EXITing 
+EXIT 
+len of payload: 2print one entry in the payload1.3.0.10
+len of payload: 2print one entry in the payload1.3.0.10
+Entry 0:
+	Subnet: 10.0.3.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.1
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Entry 1:
+	Subnet: 10.0.1.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.0
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+num_entries: 3IN HANDLE print one entry in the payload2.0.168.192
+num_entries: 2IN HANDLE print one entry in the payload3.3.0.10
+Clean up neighbor list
+nothing happened 
+nothing happened 
+EEEE 
+BBBB 
+10.0.3.1
+EEEE 
+BBBB 
+10.0.1.1
+EXITing 
+EXIT 
+Entry 0:
+	Subnet: 10.0.3.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.1
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Entry 1:
+	Subnet: 10.0.1.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.0
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Clean up neighbor list
+nothing happened 
+nothing happened 
+EEEE 
+BBBB 
+10.0.3.1
+EEEE 
+BBBB 
+10.0.1.1
+EXITing 
+EXIT 
+Entry 0:
+	Subnet: 10.0.3.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.1
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Entry 1:
+	Subnet: 10.0.1.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.0
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Clean up neighbor list
+nothing happened 
+nothing happened 
+EEEE 
+BBBB 
+10.0.3.1
+EEEE 
+BBBB 
+10.0.1.1
+EXITing 
+EXIT 
+Entry 0:
+	Subnet: 10.0.3.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.1
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Entry 1:
+	Subnet: 10.0.1.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.0
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Clean up neighbor list
+nothing happened 
+nothing happened 
+EEEE 
+BBBB 
+10.0.3.1
+EEEE 
+BBBB 
+10.0.1.1
+EXITing 
+EXIT 
+Entry 0:
+	Subnet: 10.0.3.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.1
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Entry 1:
+	Subnet: 10.0.1.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.0
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Clean up neighbor list
+nothing happened 
+nothing happened 
+EEEE 
+BBBB 
+10.0.3.1
+EEEE 
+BBBB 
+10.0.1.1
+EXITing 
+EXIT 
+Entry 0:
+	Subnet: 10.0.3.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.1
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+Entry 1:
+	Subnet: 10.0.1.1
+	Mask: 255.255.255.0
+	Next hop ip: 0.0.0.0
+	Outgoing interface: 0.0.0.0
+	Cost: 1
+	Last updated (timestamp in microseconds): 0 
+connection closed by server
