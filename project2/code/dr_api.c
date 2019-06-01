@@ -222,7 +222,12 @@ void dr_init(unsigned (*func_dr_interface_count)(),
     // and for all direct neighbors, we also maintain a separate list,
     // this saves a lot of time to handle corner cases involving direct link
     // especially scenarios like indirect route is shorter than a direct link
-
+    // forward_table_first = (route_t*)malloc(sizeof(route_t));
+    // neighbors_first = (route_t*)malloc(sizeof(route_t));
+    // memset(forward_table_first, 0 , sizeof(*forward_table_first));
+    // memset(neighbors_first,0, sizeof(*neighbors_first));
+    forward_table_first = NULL;
+    neighbors_first = NULL;
 
     for (int i = 0; i < (int)dr_interface_count(); i++){
         lvns_interface_t curr_if = dr_get_interface(i);
@@ -251,17 +256,23 @@ void dr_init(unsigned (*func_dr_interface_count)(),
 
             //push it to the direct route linked list's FIRST place
             // this can avoid traverse of the entire list
-            route_t* forward_first_old = forward_table_first;
-            route_temp->next = forward_first_old;
-            forward_table_first = route_temp;
+            if(forward_table_first != NULL){
+                route_t* forward_first_old = forward_table_first;
+                route_temp->next = forward_first_old;
+                forward_table_first = route_temp;
 
-            // since it's neighbors, we keep a copy for neighbor list as well
-            route_t* copy_route = (route_t*) malloc(sizeof(route_t));
-            memcpy(copy_route, route_temp, sizeof(*route_temp));
-            route_t* neighbors_first_old = neighbors_first;
-            copy_route->next = neighbors_first_old;
-            neighbors_first = route_temp;
-
+                // since it's neighbors, we keep a copy for neighbor list as well
+                route_t* copy_route = (route_t*) malloc(sizeof(route_t));
+                memcpy(copy_route, route_temp, sizeof(*route_temp));
+                route_t* neighbors_first_old = neighbors_first;
+                copy_route->next = neighbors_first_old;
+                neighbors_first = route_temp;
+            }else{
+                forward_table_first = route_temp;
+                route_t* copy_route = (route_t*) malloc(sizeof(route_t));
+                memcpy(copy_route, route_temp, sizeof(*route_temp));
+                neighbors_first = copy_route;
+            }
         }
     }
     last_updated_time = get_time();
@@ -501,6 +512,7 @@ void safe_dr_handle_packet(uint32_t ip, unsigned intf,
  * This method is called at a regular interval by a thread initialied by
  * dr_init.
  */
+long acc_diff = 0;
 void safe_dr_handle_periodic() {
     /* handle periodic tasks for dynamic routing here */
     // From the RFC document
@@ -515,9 +527,10 @@ void safe_dr_handle_periodic() {
 
 
     long update_time_diff = get_time() - last_updated_time;
+    acc_diff = acc_diff + update_time_diff;
     if(update_time_diff >= RIP_ADVERT_INTERVAL_SEC * 1000){ // in milli second
         printf("\n time out! time to advertise! \n");
-
+        printf("Current Time: %ld", acc_diff/1000);
         printf("*********printing full forward table*********\n");
         print_routing_table(forward_table_first);
         printf("*********printing neighbor table*********\n");
@@ -549,7 +562,7 @@ static void safe_dr_interface_changed(unsigned intf,
 // 2. interface brought down
 // 3. cost chaged
 // 
-   printf("enterting interface changed method!\n");
+    printf("entering interface changed method!\n");
     lvns_interface_t interface = dr_get_interface(intf);
     uint32_t ip_host = ntohl(interface.ip);
 
@@ -601,7 +614,6 @@ static void safe_dr_interface_changed(unsigned intf,
                 copy_new_route->next = forward_first_old;
                 forward_table_first = copy_new_route;
         }
-
     }else if (state_changed && !dr_get_interface(intf).enabled){
         // this interface is brought down.
         // notice we should delete the corresponding entry in the neighbor list.
