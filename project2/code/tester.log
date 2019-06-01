@@ -1,0 +1,27 @@
+2019/06/01 16:28:51 Starting Test Fully connected, remove and add all
+2019/06/01 16:28:51 exec: "dot": executable file not found in $PATH
+2019/06/01 16:28:51 Started lvns on port 23439
+2019/06/01 16:28:51 Created Topology
+2019/06/01 16:28:51 Starting d1
+2019/06/01 16:28:51 Starting d2
+2019/06/01 16:28:51 Starting d3
+2019/06/01 16:28:52 Routes as reported by d1
+2019/06/01 16:28:52 To 1.1.4.0 via 1.1.2.2 (next hop)
+2019/06/01 16:28:52 To 1.1.2.0 via 0.0.0.0 (next hop)
+2019/06/01 16:28:52 To 1.1.3.0 via 0.0.0.0 (next hop)
+2019/06/01 16:28:52 Routes as reported by d2
+2019/06/01 16:28:52 To 1.1.4.0 via 0.0.0.0 (next hop)
+2019/06/01 16:28:52 To 1.1.2.0 via 0.0.0.0 (next hop)
+2019/06/01 16:28:52 To 1.1.3.0 via 1.1.2.1 (next hop)
+2019/06/01 16:28:52 Routes as reported by d3
+2019/06/01 16:28:52 To 1.1.3.0 via 0.0.0.0 (next hop)
+2019/06/01 16:28:52 To 1.1.4.0 via 0.0.0.0 (next hop)
+2019/06/01 16:28:52 To 1.1.2.0 via 1.1.4.1 (next hop)
+2019/06/01 16:28:52 Removing edge d1 -> (interface) in graph
+2019/06/01 16:28:52 lvns server changed state to down
+2019/06/01 16:28:52 router d1 terminated early signal: segmentation fault
+2019/06/01 16:28:52 exec: "dot": executable file not found in $PATH
+2019/06/01 16:28:57 didnt get answer upon get route request from lvns
+2019/06/01 16:29:02 didnt get answer upon get route request from lvns
+2019/06/01 16:29:07 didnt get answer upon get route request from lvns
+2019/06/01 16:29:12 didnt get answer upon get route request from lvns
