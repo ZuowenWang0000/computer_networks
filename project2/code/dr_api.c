@@ -14,7 +14,7 @@
 #include "rmutex.h"
 #include <inttypes.h>
 
-
+// 20:27
 // debugging tools
 #define DEBUG 0
 #define LOOPDEBUG 0
@@ -342,7 +342,7 @@ next_hop_t safe_dr_get_next_hop(uint32_t ip) {
 void safe_dr_handle_packet(uint32_t ip, unsigned intf,
                            char* buf /* borrowed */, unsigned len) {
     /* handle the dynamic routing payload in the buf buffer */
-    if(LOOPDEBUG) printf("enterting handle packet method!\n");
+    printf("enterting handle packet method!\n");
    
     uint32_t ip_host = ntohl(ip);
     
@@ -503,7 +503,7 @@ void safe_dr_handle_packet(uint32_t ip, unsigned intf,
         if(LOOPDEBUG) print_routing_table(neighbors_first);
 
     }
-        if(LOOPDEBUG) printf("exiting handle packet method!\n");
+        printf("exiting handle packet method!\n");
 }
 
 
@@ -566,14 +566,15 @@ static void safe_dr_interface_changed(unsigned intf,
     // 1. interface brought up 
     // 2. interface brought down
     // 3. cost changed
-    if(DEBUG) printf("entering interface changed method!\n");
+        printf("entering interface changed method!\n");
+        fflush(stdout);
     lvns_interface_t interface = dr_get_interface(intf);
     uint32_t ip_host = ntohl(interface.ip);
     if(DEBUG) printf("ip_host: ");
     if(DEBUG) print_ip(ip_host);
     if(state_changed && dr_get_interface(intf).enabled){
-        if(DEBUG) printf("bring up interface!'n");
-        // fflush(stdout);
+        printf("bring up interface!'n");
+        fflush(stdout);
         // interface is brought up 
         // we need to 1. add an entry into the forward table.but 
                             //  if there is a indirect route , to this new router, which is cheaper than this new link
@@ -587,6 +588,7 @@ static void safe_dr_interface_changed(unsigned intf,
         new_route->next_hop_ip = 0;
         new_route->outgoing_intf = (u_int32_t)intf;
         new_route->subnet = ntohl(interface.ip);
+
 
         struct timeval t;
         t.tv_sec = -1; //neighboring link has TTL = -1
@@ -605,29 +607,84 @@ static void safe_dr_interface_changed(unsigned intf,
                 // we do this operation by, replacing all information, other than next pointer
                 restore_route_from_neighbor_list(new_route , existed_route);
                 // and push it into the neighbor list 
+
+
                 route_t* neighbor_first_old = neighbors_first;
                 new_route->next = neighbor_first_old;
                 neighbors_first = new_route; 
             }
         }else{ //such route does not exist, add it to both lists
-                route_t* neighbor_first_old = neighbors_first;
-                new_route->next = neighbor_first_old;
-                neighbors_first = new_route; 
 
-                route_t* copy_new_route = (route_t*)malloc(sizeof(route_t));
-                memcpy(new_route, copy_new_route, sizeof(*new_route));
-                route_t* forward_first_old = forward_table_first;
-                copy_new_route->next = forward_first_old;
-                forward_table_first = copy_new_route;
+                route_t* new_route2 = (route_t*)malloc(sizeof(route_t));
+        new_route2->cost = interface.cost;
+        new_route2->is_garbage = 0;
+        new_route2->mask = ntohl(interface.subnet_mask);
+        new_route2->next_hop_ip = 0;
+        new_route2->outgoing_intf = (u_int32_t)intf;
+        new_route2->subnet = ntohl(interface.ip);
+        new_route2->next = NULL;
+
+                        print_ip(new_route2->subnet);
+                // printf("new route COST is : %d", new_route2->cost);
+
+                // printf("enter here !");
+                // fflush(stdout);
+                if(neighbors_first!=NULL){
+                    // printf("neighbor_first!=null/n");
+                    route_t* neighbor_first_old = neighbors_first;
+                    new_route2->next = neighbor_first_old;
+                    neighbors_first = new_route2; 
+                }else{
+                    // printf("neighbor_first==null/n");
+                    neighbors_first = new_route2;
+
+
+                    // printf("print ip new route2:");
+                    // print_ip(new_route2->subnet);
+                    // printf("print neighbors first:");
+                    // print_ip(neighbors_first->subnet);
+
+                    // if(new_route2==NULL){
+                    //     printf("new_route null!\n");
+                    // }
+
+                    // if(new_route2->next==NULL){
+                    //     printf("new_route next null!\n");
+                    // }
+                }
+
+                if(forward_table_first!=NULL){
+                    // printf("forward_first!=null/n");
+                    route_t* copy_new_route = (route_t*)malloc(sizeof(route_t));
+                    memcpy(copy_new_route, new_route2, sizeof(*new_route2));
+                    route_t* forward_first_old = forward_table_first;
+                    copy_new_route->next = forward_first_old;
+                    forward_table_first = copy_new_route;
+                }else{
+                    // printf("forward_first==null/n");
+                    route_t* copy_new_route = (route_t*)malloc(sizeof(route_t));
+                    memcpy(copy_new_route, new_route2, sizeof(*new_route2));
+                    forward_table_first = copy_new_route;
+
+                    // printf("print ip copy_new_route:");
+                    // print_ip(copy_new_route->subnet);
+                    // printf("print forward_table_first:");
+                    // print_ip(forward_table_first->subnet);
+                }
+                // print_ip(forward_table_first->subnet);
+                // printf("COST is : %d", forward_table_first->cost);
+
+                // fflush(stdout);
         }
+        // free(new_route);
     }else if (state_changed && !dr_get_interface(intf).enabled){
         // this interface is brought down.
         // notice we should delete the corresponding entry in the neighbor list.
         // and if in the forward list, the route to that router is a direct one, we delete it,
         // otherwise we keep it.
         // first we handle the direct table
-        if(DEBUG) printf("bring done interface!/n");
-        // fflush(stdout);
+        printf("bring down interface!/n");
+        fflush(stdout);
         route_t* to_delete_route;
         if(check_ip_in_list_return_route(neighbors_first, ip_host, &to_delete_route)){
             to_delete_route->cost = INFINITY;
@@ -693,19 +750,26 @@ static void safe_dr_interface_changed(unsigned intf,
             curr_route = curr_route->next;
         }
         //free(to_modify_route);
+
     }
+    
+    printf("PAPA");
+    fflush(stdout);
+
+
+
 
     advertise_to_neighbors((int)dr_interface_count());
 
-        if(DEBUG){
-            printf("*********printing full forward table*********\n");
-            print_routing_table(forward_table_first);
-            printf("*********printing neighbor table*********\n");
-            print_routing_table(neighbors_first);
-        }
+        // if(DEBUG){
+            // printf("*********printing full forward table*********\n");
+            // print_routing_table(forward_table_first);
+            // printf("*********printing neighbor table*********\n");
+            // print_routing_table(neighbors_first);
+        // }
 
 
-        if(DEBUG) printf("exiting interface changed method!\n");
+        printf("exiting interface changed method!\n");
 }
 
 /* definition of internal functions */
@@ -748,9 +812,8 @@ void print_routing_table(route_t *head){
         print_ip(current->outgoing_intf);
         printf("\tCost: %d\n", current->cost);
         printf("\tLast updated (timestamp in seconds): %li \n", current->last_updated.tv_usec / 1000);
-        // printf("==============================\n");
+        printf("==============================\n");
         counter ++;
-
         current = current->next;
     }
 }
@@ -809,7 +872,7 @@ void advertise_to_neighbors(int num_interfaces){
 
             // if(dr_get_interface(i).enabled){
 
-dr_send_payload(RIP_IP,RIP_IP, i, (char*)payload_header, 4 + 20*route_entry_counter);
+            dr_send_payload(RIP_IP,RIP_IP, i, (char*)payload_header, 4 + 20*route_entry_counter);
             // }
             // dr_send_payload(RIP_IP,RIP_IP, i, (char*)payload_header, 4 + 20*route_entry_counter);
             free(payload_header);
