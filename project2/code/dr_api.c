@@ -544,10 +544,10 @@ void safe_dr_handle_periodic() {
         // printf("current system time: %ld \n",)
         // printf("\n time out! time to advertise! \n");
         // printf("Current Time: %ld", acc_diff/1000);
-        // printf("*********printing full forward table*********\n");
-        // print_routing_table(forward_table_first);
-        // printf("*********printing neighbor table*********\n");
-        // print_routing_table(neighbors_first);
+        printf("*********printing full forward table*********\n");
+        print_routing_table(forward_table_first);
+        printf("*********printing neighbor table*********\n");
+        print_routing_table(neighbors_first);
 
         last_updated_time = get_time();
         advertise_to_neighbors((int)dr_interface_count());
@@ -878,14 +878,29 @@ int check_ip_in_list_return_route(route_t* list, uint32_t targetIP, route_t* tar
 int validate_packet(rip_header_t* rip_header, uint32_t ip_host, unsigned interface){
     //1. The Response must be ignored if it is not from the RIP port
     // comment: this trivialy hold in our setting
-    //2. The datagram's ipv4 source address should be checked tosee whether the datagram is 
+
+    //2. The datagram's ipv4 source address should be checked to see whether the datagram is 
     // from a valid neighbor
     if(!check_ip_in_list(neighbors_first, ip_host)){
+        return 0;
+    }
+    //check if the interface is shut?
+    if(dr_get_interface(interface).enabled == 0){
         return 0;
     }
 
     //3. check if the response is from one of the router's own address
     //TODO  how?
+    // route_t* curr_route = neighbors_first;
+    // while(curr_route!=NULL){
+        
+
+    //     curr_route = curr_route->next;
+    // }
+    route_t* curr_route = NULL;
+    if(longest_match_prefix_route(neighbors_first, ip_host, curr_route)==NULL){
+        return 0;
+    }
 
 
 
