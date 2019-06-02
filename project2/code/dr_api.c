@@ -351,11 +351,15 @@ void safe_dr_handle_packet(uint32_t ip, unsigned intf,
     if(NEWDEBUG) printf("num_entries in the packet: %d", ((int)len - 4)/20);
 
     // correspond to the 3.9 input processing section in the protocol description
-    if((!validate_packet((rip_header_t*)buf, ip_host, intf))||(((rip_header_t*)buf)->command!=RIP_COMMAND_RESPONSE)){
+    if((!validate_packet((rip_header_t*)buf, ip_host, intf))){
         // invalid packet or not reponse message, ignore
-        printf("incoming packet ignored\n");
+        printf("incoming packet ignored1\n");
         return;
-    }else{
+    }else if((((rip_header_t*)buf)->command!=RIP_COMMAND_RESPONSE)){
+                printf("incoming packet ignored2\n");
+        return;
+        
+        }else{
         int update_flag = 0;
         // start handling valid response message
 
@@ -529,12 +533,21 @@ void safe_dr_handle_periodic() {
     long update_time_diff = get_time() - last_updated_time;
     acc_diff = acc_diff + update_time_diff;
     if(update_time_diff >= RIP_ADVERT_INTERVAL_SEC * 1000){ // in milli second
-        printf("\n time out! time to advertise! \n");
-        printf("Current Time: %ld", acc_diff/1000);
-        printf("*********printing full forward table*********\n");
-        print_routing_table(forward_table_first);
-        printf("*********printing neighbor table*********\n");
-        print_routing_table(neighbors_first);
+
+            time_t rawtime;
+            struct tm * timeinfo;
+
+            time ( &rawtime );
+            timeinfo = localtime ( &rawtime );
+            printf ( "Current local time and date: %s", asctime (timeinfo) );
+
+        // printf("current system time: %ld \n",)
+        // printf("\n time out! time to advertise! \n");
+        // printf("Current Time: %ld", acc_diff/1000);
+        // printf("*********printing full forward table*********\n");
+        // print_routing_table(forward_table_first);
+        // printf("*********printing neighbor table*********\n");
+        // print_routing_table(neighbors_first);
 
         last_updated_time = get_time();
         advertise_to_neighbors((int)dr_interface_count());
@@ -561,18 +574,17 @@ static void safe_dr_interface_changed(unsigned intf,
 // 1. interface brought up 
 // 2. interface brought down
 // 3. cost chaged
-// 
     printf("entering interface changed method!\n");
     lvns_interface_t interface = dr_get_interface(intf);
     uint32_t ip_host = ntohl(interface.ip);
-
     if(state_changed && dr_get_interface(intf).enabled){
+        printf("bring up interface!'n");
+        fflush(stdout);
         // interface is brought up 
         // we need to 1. add an entry into the forward table.but 
                             //  if there is a indirect route , to this new router, which is cheaper than this new link
                             //  then we only add this to neighbor list. otherwise we need to modify both list
         // first find lookup the interface.ip in this 
-        
         route_t* existed_route = (route_t*)malloc(sizeof(route_t));
         route_t* new_route = (route_t*)malloc(sizeof(route_t));
         new_route->cost = interface.cost;
@@ -619,29 +631,30 @@ static void safe_dr_interface_changed(unsigned intf,
         // notice we should delete the corresponding entry in the neighbor list.
         // and if in the forward list, the route to that router is a direct one, we delete it,
         // otherwise we keep it.
-
         // first we handle the direct table
+        printf("bring done interface!/n");
+        fflush(stdout);
         route_t* to_delete_route = (route_t*)malloc(sizeof(route_t));
         if(check_ip_in_list_return_route(neighbors_first, ip_host, to_delete_route)){
             to_delete_route->cost = INFINITY;
-            clean_neighbor_list(neighbors_first); //can also use this method to clean neighbor list
-        }else{
-            printf("ERROR\n");
-        }
+        }else{printf("ERROR\n");}
 
+        clean_neighbor_list(neighbors_first); //can also use this method to clean neighbor list
         // now check in the forward list, delete all entries, which entry->outgoing_intf = intf
         route_t* curr_route = forward_table_first;
-        while(forward_table_first!=NULL){
+
+        while(curr_route!=NULL){
             if(curr_route->outgoing_intf == (uint32_t)intf){
                 curr_route->cost = INFINITY;
+
             }
             curr_route = curr_route->next;
         }
-
         // clean the table
 
         clean_forward_list(forward_table_first);
-        free(to_delete_route);
+        // free(to_delete_route);
+
     }else if (cost_changed && dr_get_interface(intf).enabled){
         // modify all affected routes in both lists
 
